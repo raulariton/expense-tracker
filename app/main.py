@@ -1,10 +1,10 @@
 import imutils
 from imutils.perspective import four_point_transform
 import pytesseract
+
+from app.perspective_transform import detect_corners, perspective_transform
 from image_processing import *
 from llm_text_extraction import LLM_extraction
-
-
 
 def zoom_in(img_cpy,bounding_box,ratio):
 
@@ -26,7 +26,7 @@ def recognize_text(receipt):
     print("\n")
     return text
 
-def extract_receipt(orig):
+def perpective_transform(orig):
     '''
 
     :param orig:
@@ -35,7 +35,7 @@ def extract_receipt(orig):
 
     image = imutils.resize(orig.copy(), width=500)
 
-    edged,ratio = pre_process_image(image.copy())
+    edged, ratio = pre_process_image(image.copy())
     bounding_box = extract_receipt_bounding_box(edged, image.copy())
 
     receipt = zoom_in(orig,bounding_box,ratio)  #Pass the original image
@@ -48,10 +48,15 @@ def extract_receipt(orig):
 
 def main():
 
-    receipt = extract_receipt(ORIGINAL_IMAGE)
-    text = recognize_text(receipt)
-    LLM_extraction(text)
+    input_image = cv2.imread(r"U:\Projects\receipt-scanner-api\images\bon2.jpg")
+    receipt = perspective_transform(input_image)
+
+    # sleep to see the images
     cv2.waitKey(0)
+
+    # text = recognize_text(receipt)
+    # LLM_extraction(text)
+    # cv2.waitKey(0)
 
 
 
