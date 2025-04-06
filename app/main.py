@@ -3,8 +3,28 @@ from imutils.perspective import four_point_transform
 import pytesseract
 from image_processing import *
 from llm_text_extraction import LLM_extraction
+from ultralytics import YOLO
+
+model = YOLO("../receipt_detector/detector.pt")
 
 
+def inference(file):
+    results = model(file, save=True, show=True)
+    img = results[0].orig_img
+    # only one result should be in the image
+    for i, box in enumerate(results[0].boxes):
+        # Get bounding box in (x1, y1, x2, y2) format
+        x1, y1, x2, y2 = map(int, box.xyxy[0])  # Convert to int
+
+        # Crop the image
+        cropped = img[y1:y2, x1:x2]
+
+        # Save or display the crop
+        cv2.imwrite(f"crop_{i}.jpg", cropped)
+        # OR show it
+        cv2.imshow(f"Crop {i}", cropped)
+
+        return cropped
 
 def zoom_in(img_cpy,bounding_box,ratio):
 
@@ -42,16 +62,13 @@ def extract_receipt(orig):
 
     return receipt
 
-
-
-
-
 def main():
 
-    receipt = extract_receipt(ORIGINAL_IMAGE)
+    receipt = inference("../images/bon3.jpg")
     text = recognize_text(receipt)
-    LLM_extraction(text)
+    print(text)
     cv2.waitKey(0)
+
 
 
 
