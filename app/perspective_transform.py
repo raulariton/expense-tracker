@@ -12,14 +12,27 @@ def perspective_transform(input_image):
     """
 
     # resize image
-    # NOTE: width affects the result significantly
-    input_image = imutils.resize(input_image, width=500)
+    # NOTE: width affects the result significantly,
+    #  for some reason
+    input_image = imutils.resize(input_image)
 
     # get receipt corner points
-    corners = detect_corners(input_image)
+    corner_points = detect_corners(input_image)
 
-    # get best fit rectangle corner points
-    best_fit_rectangle_points = get_best_fit_rectangle_points(input_image)
+    # get best fit rectangle dimensions
+    (width, height) = get_best_fit_rectangle_dimensions(input_image)
+
+    dest_points = np.array(
+        [[0, 0], [width, 0], [width, height], [0, height]],
+        dtype="float32"
+    )
+
+    m = cv2.getPerspectiveTransform(corner_points, dest_points)
+    deskewed = cv2.warpPerspective(input_image, m, (int(width), int(height)))
+
+    # show the image
+    cv2.imshow("Deskewed", deskewed)
+    cv2.waitKey(0)
 
 def draw_labelled_circle(img, x, y):
     """
@@ -40,17 +53,20 @@ def draw_labelled_circle(img, x, y):
         1
     )
 
-def get_best_fit_rectangle_points(image):
+def get_best_fit_rectangle_dimensions(image):
 
     largest_contour = get_largest_contour(image)
 
     # get best fit rectangle
     best_fit_rectangle = cv2.minAreaRect(largest_contour)
 
-    # get 4 corner points of the rectangle
-    best_fit_rectangle_points = cv2.boxPoints(best_fit_rectangle)
-    best_fit_rectangle_points = np.intp(best_fit_rectangle_points)
+    # get dimensions
+    (x, y), (width, height), angle = best_fit_rectangle
 
-    return best_fit_rectangle_points
+    # get 4 corner points of the rectangle
+    # best_fit_rectangle_points = cv2.boxPoints(best_fit_rectangle)
+    # best_fit_rectangle_points = np.intp(best_fit_rectangle_points)
+
+    return (width, height)
 
 

@@ -48,7 +48,7 @@ def perpective_transform(orig):
 
 def main():
 
-    input_image = cv2.imread(r"U:\Projects\receipt-scanner-api\images\bon2.jpg")
+    input_image = cv2.imread(r"U:\Projects\receipt-scanner-api\images\stefan_bon.jpg")
     receipt = perspective_transform(input_image)
 
     # sleep to see the images
