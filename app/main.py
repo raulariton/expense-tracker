@@ -1,6 +1,12 @@
+import math
+
 import imutils
 from imutils.perspective import four_point_transform
 import pytesseract
+import deskew as dsk
+from ocr_preprocessing import pre_process_image as ocr_pre_process_image
+
+from app.perspective_transform import detect_corners, perspective_transform
 from image_processing import *
 from llm_text_extraction import LLM_extraction
 from ultralytics import YOLO
@@ -46,7 +52,7 @@ def recognize_text(receipt):
     print("\n")
     return text
 
-def extract_receipt(orig):
+def perpective_transform(orig):
     '''
 
     :param orig:
@@ -55,20 +61,34 @@ def extract_receipt(orig):
 
     image = imutils.resize(orig.copy(), width=500)
 
-    edged,ratio = pre_process_image(image.copy())
+    edged, ratio = pre_process_image(image.copy())
     bounding_box = extract_receipt_bounding_box(edged, image.copy())
 
     receipt = zoom_in(orig,bounding_box,ratio)  #Pass the original image
 
     return receipt
 
+
+def rotate(image: np.ndarray, angle: float, background) -> np.ndarray:
+    old_width, old_height = image.shape[:2]
+    angle_radian = math.radians(angle)
+    width = abs(np.sin(angle_radian) * old_height) + abs(np.cos(angle_radian) * old_width)
+    height = abs(np.sin(angle_radian) * old_width) + abs(np.cos(angle_radian) * old_height)
+
+    image_center = tuple(np.array(image.shape[1::-1]) / 2)
+    rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0)
+    rot_mat[1, 2] += (width - old_width) / 2
+    rot_mat[0, 2] += (height - old_height) / 2
+    return cv2.warpAffine(image, rot_mat, (int(round(height)), int(round(width))), borderValue=background)
+
 def main():
 
     receipt = inference("../images/bon3.jpg")
     text = recognize_text(receipt)
-    print(text)
-    cv2.waitKey(0)
 
+    ocr_pre_process_image(receipt)
+
+    cv2.waitKey(0)
 
 
 
