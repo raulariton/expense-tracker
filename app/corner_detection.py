@@ -116,7 +116,7 @@ def get_largest_contour(image):
     blurred_image = cv2.GaussianBlur(
         image_greyscale,
         (kernel_size, kernel_size),
-        10
+        0
     )
 
     # DEBUG
@@ -128,8 +128,8 @@ def get_largest_contour(image):
     # NOTE: the thresholds affect the result significantly
     canny_outlined_image = cv2.Canny(
         blurred_image,
-        12,
-        14
+        25,
+        50
     )
 
     # find contours

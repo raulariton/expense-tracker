@@ -1,7 +1,5 @@
 import cv2
 import numpy as np
-ORIGINAL_IMAGE = cv2.imread(r"U:\Projects\receipt-scanner-api\images\raulbon.jpg") #KEEP IN MIND THERE IS A TRIAL JPG AND PNG
-
 
 def pre_process_image(image):
 

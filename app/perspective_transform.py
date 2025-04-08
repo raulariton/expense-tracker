@@ -14,7 +14,7 @@ def perspective_transform(input_image):
     # resize image
     # NOTE: width affects the result significantly,
     #  for some reason
-    input_image = imutils.resize(input_image)
+    input_image = imutils.resize(input_image, width=525)
 
     # get receipt corner points
     corner_points = detect_corners(input_image)
@@ -32,6 +32,8 @@ def perspective_transform(input_image):
 
     # show the image
     cv2.imshow("Deskewed", deskewed)
+    # save image to disk
+    cv2.imwrite("deskewed.jpg", deskewed)
     cv2.waitKey(0)
 
 def draw_labelled_circle(img, x, y):
