@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ExpenseTracker
 
 ExpenseTracker is a web application that allows for scanning shopping receipts and tracking the expenses.
@@ -7,3 +8,4 @@ ExpenseTracker is a web application that allows for scanning shopping receipts a
 ## Tech stack
 
 ## Contributors
+=======

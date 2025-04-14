@@ -1,0 +1,34 @@
+{
+    "summary": {
+      "total": 1234,
+      "today": 1234,
+      "week": 1234
+    },
+    "categories": [
+      { "title": "Food & Dining", "amount": 1234 },
+      { "title": "Shopping", "amount":1234 },
+      { "title": "Transport", "amount": 1234 },
+      { "title": "Bills", "amount": 1234 }
+    ],
+    "recent": [
+      {
+        "name": "Grocery Shopping",
+        "time": "Today, 2:30 PM",
+        "amount": 1234,
+        "icon": "food"
+      },
+      {
+        "name": "Gas Station",
+        "time": "Yesterday, 6:15 PM",
+        "amount": 1234,
+        "icon": "transport"
+      },
+      {
+        "name": "Clothing Store",
+        "time": "April 12, 11:00 AM",
+        "amount": 1234,
+        "icon": "shopping"
+      }
+    ]
+  }
+  
