@@ -112,8 +112,14 @@ def rotate_image(numpy_image):
     image = Image.fromarray(numpy_image.astype("uint8"))
     # Rotate the image by the inverse of the output
     # rotate as less as possible
-    if (90 - rotation) < rotation:
-        rotation = 90 - rotation
+    print(f"rotation: {rotation}")
+    if rotation > 90:
+        if abs((180 - rotation)) < abs(rotation):
+            rotation = abs(180 - rotation)
+    else:
+        if abs((90 - rotation)) < abs(rotation):
+            rotation = abs(90 - rotation)
+
 
     image = image.rotate(rotation, expand=True, fillcolor="white")
 
