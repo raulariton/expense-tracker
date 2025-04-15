@@ -1,9 +1,13 @@
 import math
-
+import cv2
 import imutils
 from imutils.perspective import four_point_transform
 import pytesseract
+import easyocr
 import deskew as dsk
+import re
+
+
 from ocr_preprocessing import pre_process_image as ocr_pre_process_image
 
 from app.perspective_transform import detect_corners, perspective_transform
@@ -23,12 +27,10 @@ def inference(file):
         x1, y1, x2, y2 = map(int, box.xyxy[0])  # Convert to int
 
         # Crop the image
-        cropped = img[y1:y2, x1:x2]
+        cropped = img[(y1):(y2), (x1):(x2)]
 
         # Save or display the crop
         cv2.imwrite(f"crop_{i}.jpg", cropped)
-        # OR show it
-        cv2.imshow(f"Crop {i}", cropped)
 
         return cropped
 
@@ -38,11 +40,9 @@ def zoom_in(img_cpy,bounding_box,ratio):
     cv2.imshow("Receipt", receipt)
     return receipt
 
-def recognize_text(receipt):
+def recognize_text_tess(receipt):
 
-    receipt = pre_process_text(receipt)
-
-    options = "--psm 4"
+    options = "--oem 3 --psm 4"
 
     text = pytesseract.image_to_string(receipt, config=options)
 
@@ -52,7 +52,36 @@ def recognize_text(receipt):
     print("\n")
     return text
 
-def perpective_transform(orig):
+def bounding_boxes(receipt):
+    data = pytesseract.image_to_data(receipt, output_type=pytesseract.Output.DICT)
+
+    # Iterate through the data and print the text and its bounding box
+    for i in range(len(data['text'])):
+        text = data['text'][i]
+        if text.strip():  # Ensure the text is not empty
+            x, y, w, h = data['left'][i], data['top'][i], data['width'][i], data['height'][i]
+            cv2.rectangle([x, y, x + w, y + h], outline="red", width=2)
+
+def recognize_text_easy(receipt):
+    reader = easyocr.Reader(['ro'], gpu=False)
+    data = reader.readtext(receipt)
+    print(data)
+    text_data = ""
+
+    for bbox, text, score in data:
+        pts = np.array(bbox, dtype=np.int32)
+        cv2.rectangle(receipt, pts[0], pts[2], (0, 255, 0), 2)
+        text_data += text + "\n"
+
+    pattern = r'^(?!.*TVA).*total.*$'
+
+    for _ in range(0,len(data)):
+        if re.search(pattern, data[_][1], re.IGNORECASE):
+            print("Total price is: "+data[_+1][1])
+
+    return text_data
+
+def perspective_transform(orig):
     '''
 
     :param orig:
@@ -83,13 +112,19 @@ def rotate(image: np.ndarray, angle: float, background) -> np.ndarray:
 
 def main():
 
-    receipt = inference("../images/bon3.jpg")
-    text = recognize_text(receipt)
+    #receipt = inference("../images/img.png")
+    #receipt = ocr_pre_process_image(receipt)
+    receipt = cv2.imread("../images/rotated.jpg")
+    text = recognize_text_easy(receipt)
+    print(text)
+    cv2.imshow("receipt",receipt)
 
-    ocr_pre_process_image(receipt)
 
-    cv2.waitKey(0)
+    LLM_extraction(text)
 
+    cv2.imwrite("../debug_images/detect.png",receipt)
+
+    cv2.waitKey()
 
 
 if __name__ == '__main__':

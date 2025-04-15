@@ -4,9 +4,6 @@ import numpy as np
 def pre_process_image(image):
 
 
-    # ratio used to scale when countour is found
-    ratio = ORIGINAL_IMAGE.shape[1] / float(image.shape[1])
-
     blurred = cv2.GaussianBlur(image, (5, 5,), 0)
 
     gray = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
@@ -19,17 +16,13 @@ def pre_process_image(image):
     cv2.imshow("blurred", blurred)
     cv2.imshow("edged", edged)
 
-    return edged,ratio
+    return edged
 
 def pre_process_text(receipt):
 
     receipt = cv2.resize(receipt, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
 
-    gray = cv2.cvtColor(receipt, cv2.COLOR_BGR2GRAY)
-
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-
-
+    blurred = cv2.GaussianBlur(receipt, (5, 5), 0)
     gray = cv2.adaptiveThreshold(blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 9, 3)
 
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
