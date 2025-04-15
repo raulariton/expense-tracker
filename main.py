@@ -1,7 +1,7 @@
 import cv2
 from app.detect_receipt import detect_receipt
 from app.preprocess_receipt import preprocess_receipt
-from app.ocr import extract_text
+from app.ocr import extract_text, inference
 
 
 # TODO:
@@ -13,10 +13,13 @@ def main():
 
     # 1. Receive image
     # INSERT IMAGE PATH HERE (e.g., "path/to/image.jpg")
-    image_path = "images/bon6.jpg"
+    image_path = "images/bon4.png"
     image = cv2.imread(image_path)
     if image is None:
         return
+
+    #cropped = inference(image_path)
+
 
     # 2. Detect receipt, crop it and perspective transform it
     receipt = detect_receipt(image)

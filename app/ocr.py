@@ -4,15 +4,16 @@ import imutils
 from imutils.perspective import four_point_transform
 import pytesseract
 import easyocr
-import deskew as dsk
 import re
 import numpy as np
 from ultralytics import YOLO
 
-#model = YOLO("../receipt_detector/detector.pt")
 
-"""
+
+
 def inference(file):
+    model = YOLO("receipt_detector/detector.pt")
+
     results = model(file, save=True, show=True)
     img = results[0].orig_img
     # only one result should be in the image
@@ -27,7 +28,7 @@ def inference(file):
         cv2.imwrite(f"crop_{i}.jpg", cropped)
 
         return cropped
-"""
+
 
 
 def zoom_in(img_cpy,bounding_box,ratio):
@@ -40,15 +41,23 @@ def recognize_text_tess(receipt):
 
     options = "--oem 3 --psm 4"
 
-    text = pytesseract.image_to_string(receipt, config=options).splitLines()
+    text = pytesseract.image_to_string(receipt, config=options).splitlines()
 
     print("[INFO] raw output:")
     print("==================")
     print(text)
     print("\n")
+
+    bounding_boxes(receipt)
+
     return text
 
 def bounding_boxes(receipt):
+    """
+    Draws text bounding boxes for tesseract.
+    :param receipt: cv2 image
+    :return:
+    """
     data = pytesseract.image_to_data(receipt, output_type=pytesseract.Output.DICT)
 
     # Iterate through the data and print the text and its bounding box
@@ -56,22 +65,17 @@ def bounding_boxes(receipt):
         text = data['text'][i]
         if text.strip():  # Ensure the text is not empty
             x, y, w, h = data['left'][i], data['top'][i], data['width'][i], data['height'][i]
-            cv2.rectangle([x, y, x + w, y + h], outline="red", width=2)
-
-def find_total(text):
-    pattern = r'^(?!.*TVA).*total.*$'
-
-    for i in range(0, len(text)):
-        if re.search(pattern, text[i], re.IGNORECASE):
-            print("Total price is: " + text[i+1])
-            return text[i+1]
-
-
-
+            cv2.rectangle(receipt, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
 def recognize_text_easy(receipt):
+    """
+    Uses easyOCR to recognize and draw bounding boxes.
+    :param receipt: cv2 image
+    :return: list of strings (recognized text)
+    """
+
     reader = easyocr.Reader(['ro'], gpu=False)
-    data = reader.readtext(receipt)
+    data = reader.readtext(receipt,decoder='beamsearch',link_threshold=0.8)
     print(data)
     text_data = []
 
@@ -82,26 +86,44 @@ def recognize_text_easy(receipt):
 
     return text_data
 
-
 def extract_text(receipt,mode):
     """
 
     :param receipt: cv2 image
     :param mode: 0 - uses easyOCR, 1 - uses tesseract
-    :return: extracted text
+    :return: string: Extracted amount.
     """
 
     text = ""
-    #receipt = inference("../images/img.png")
-    #receipt = ocr_pre_process_image(receipt)
     if mode == 0:
         text = recognize_text_easy(receipt)
     elif mode == 1:
         text = recognize_text_tess(receipt)
 
+
     print(text)
 
     return find_total(text)
 
+def find_total(text):
+    """
+    Finds the first list element containing total (but not TVA), using regex.
+    Assumes amount is at position to the right from total found.
+    :param text: list of strings
+    :return: the amount
+    """
+
+    pattern = r'^(?!.*TVA).*total.*$'
+    amount = r'\d[.,]\d{2}'
+
+    for i in range(0, len(text)):
+        if re.search(pattern, text[i], re.IGNORECASE):
+            modified_text = text[i+1].replace(" ", "")
+            if re.search(amount,modified_text,re.IGNORECASE):
+                print("Total price is: " + text[i+1])
+                return modified_text
+            else:
+                print("Total price is: "+text[i+1]+"."+text[i+2])
+            return modified_text+"."+text[i+2]
 
 

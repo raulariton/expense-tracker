@@ -29,7 +29,7 @@ def preprocess_receipt(image):
 
     # denoise the image
     denoised = cv2.fastNlMeansDenoising(
-        src=gray, dst=None, h=5, templateWindowSize=7, searchWindowSize=21
+        src=gray, dst=None, h=7, templateWindowSize=9, searchWindowSize=27
     )
 
     # apply adaptive thresholding (binarization)
