@@ -13,13 +13,10 @@ def main():
 
     # 1. Receive image
     # INSERT IMAGE PATH HERE (e.g., "path/to/image.jpg")
-    image_path = "images/bon4.png"
+    image_path = ""
     image = cv2.imread(image_path)
     if image is None:
         return
-
-    #cropped = inference(image_path)
-
 
     # 2. Detect receipt, crop it and perspective transform it
     receipt = detect_receipt(image)
