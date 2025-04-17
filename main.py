@@ -1,7 +1,8 @@
 import cv2
+
 from app.detect_receipt import detect_receipt
 from app.preprocess_receipt import preprocess_receipt
-from app.ocr import extract_text, inference
+from app.ocr import extract_text, EASYOCR
 
 
 # TODO:
@@ -23,22 +24,23 @@ def main():
 
     # 3. Preprocess the image for OCR
     preprocessed_receipt = preprocess_receipt(receipt)
-    # the rest of the function is work in progress
 
     # 4. Perform OCR
-    text = extract_text(preprocessed_receipt,0)
+    text = extract_text(preprocessed_receipt, EASYOCR)
 
-
+    # DEBUG: Show the preprocessed image
     cv2.imshow("receipt", preprocessed_receipt)
     cv2.imwrite("debug_images/detect.png", preprocessed_receipt)
 
+    # Print OCR output (total)
     print(text)
+    # TODO: Have it return a JSON object (API response)
 
-    # 5. Extract text using LLM
+    # 5. (Text processing) Extract needed data using LLM
     # output_json = LLM_extraction(ocr_text)
 
-    # print the output JSON
-    # print(output_json)
+    # 6. Send API response
+    # return output_json
 
 
 if __name__ == "__main__":
