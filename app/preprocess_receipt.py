@@ -106,23 +106,32 @@ def rotate_image(numpy_image):
     # where the transform is lined up perfectly with the alternating dark
     # text and white lines
     r = array([rms_flat(line) for line in sinogram.transpose()])
-    rotation = argmax(r)
+    skew_angle = argmax(r)
+
+    # adjust the skew angle to be between -90 and 90 degrees
+    if skew_angle > 90:
+        skew_angle = -(skew_angle - 90)
+    elif skew_angle > 0:
+        skew_angle = min(90 - skew_angle, skew_angle)
+    elif skew_angle < -90:
+        skew_angle = -(skew_angle + 90)
+    elif skew_angle < 0:
+        skew_angle = max(-90 - skew_angle, skew_angle)
+
+    # DEBUG
+    # print(f"adjusted skew angle = {skew_angle}")
 
     # convert image to PIL (pillow) format
     image = Image.fromarray(numpy_image.astype("uint8"))
-    # Rotate the image by the inverse of the output
-    # rotate as less as possible
-    if rotation > 90:
-        if abs((180 - rotation)) < abs(rotation):
-            rotation = abs(180 - rotation)
-    else:
-        if abs((90 - rotation)) < abs(rotation):
-            rotation = abs(90 - rotation)
 
+    # if the skew angle is small, return the image as is
+    # this is to avoid rotating the image if it is already straight
+    if abs(skew_angle) < 5:
+        return np.array(image)
 
-    image = image.rotate(rotation, expand=True, fillcolor="white")
+    image = image.rotate(skew_angle, expand=True, fillcolor="white")
 
-    # show image
+    # DEBUG: show image
     image.show()
 
     # return as numpy array
