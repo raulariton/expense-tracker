@@ -3,6 +3,7 @@ import cv2
 from app.detect_receipt import detect_receipt
 from app.preprocess_receipt import preprocess_receipt
 from app.ocr import extract_text, EASYOCR
+from app.text_processing import process_ocr_text, create_json_response
 
 
 # TODO:
@@ -28,16 +29,16 @@ def main():
     # 4. Perform OCR
     text = extract_text(preprocessed_receipt, EASYOCR)
 
-    # DEBUG: Show the preprocessed image
-    cv2.imshow("receipt", preprocessed_receipt)
-    cv2.imwrite("debug_images/detect.png", preprocessed_receipt)
+    # DEBUG: Saving found bounding boxes
+    cv2.imwrite("debug_images/detected_bounding_boxes.png", preprocessed_receipt)
 
     # Print OCR output (total)
     print(text)
-    # TODO: Have it return a JSON object (API response)
 
-    # 5. (Text processing) Extract needed data using LLM
-    # output_json = LLM_extraction(ocr_text)
+    # 5. (Text processing)
+    json_response = create_json_response(process_ocr_text(text))
+
+    print(json_response)
 
     # 6. Send API response
     # return output_json

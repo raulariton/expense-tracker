@@ -11,7 +11,7 @@ from ultralytics import YOLO
 EASYOCR = 0
 TESSERACT = 1
 
-
+# TODO: Remove (?)
 def inference(file):
     model = YOLO("receipt_detector/detector.pt")
 
