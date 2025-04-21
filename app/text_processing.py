@@ -1,39 +1,34 @@
-from app.classes.ReceiptResponse import ReceiptResponse
+from app.classes.exceptions import OCRProcessingError
+from app.classes.receipt_models import Expense
+import re
 
 
-def process_ocr_text(ocr_text: str) -> ReceiptResponse:
+def process_text(ocr_text: str) -> Expense:
     """
     Processes the raw OCR text and creates a ReceiptResponse object to be
     returned as a JSON response.
     :param ocr_text: The text extracted from the receipt image.
-    :return: ReceiptResponse object containing processed data.
+    :return: Expense object containing processed data, which
+    will be sent to the API response
     """
 
-    # TODO: any logic to extract all relevant data
-    #  from receipt response goes HERE
-    #  (llm processing, regex, etc.)
+    # regular expression method
+    pattern = r"^(?!.*TVA).*total.*$"
+    amount = r"\d[.,]\d{2}"
 
-    total = float(ocr_text.split()[0].replace(",", "."))
+    total = None
+    for i in range(0, len(ocr_text)):
+        if re.search(pattern, ocr_text[i], re.IGNORECASE):
+            total = ocr_text[i + 1].replace(" ", "")
+            if re.search(amount, total, re.IGNORECASE):
+                total = total.replace(",", ".")
 
-    return ReceiptResponse(total)
+    if total is None:
+        raise OCRProcessingError("Unable to find the total amount in the text.")
 
+    try:
+        total = float(total)
+    except ValueError:
+        raise OCRProcessingError("Unable to find a valid total amount in the text.")
 
-def create_json_response(receipt_response: ReceiptResponse) -> str:
-    """
-    Creates a JSON response from the processed data.
-    :param receipt_response: The ReceiptResponse object containing extracted data.
-    :return: JSON response as a string.
-    """
-    import json
-
-    # Convert the data to JSON format
-    json_response = {
-        "status": "success",
-        "data": {
-            "total": receipt_response.total,
-            "vendor": receipt_response.vendor,
-            "date": receipt_response.date,
-        },
-    }
-
-    return json.dumps(json_response)
+    return Expense(total=total)

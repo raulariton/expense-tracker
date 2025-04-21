@@ -11,32 +11,6 @@ from ultralytics import YOLO
 EASYOCR = 0
 TESSERACT = 1
 
-# TODO: Remove (?)
-def inference(file):
-    model = YOLO("receipt_detector/detector.pt")
-
-    results = model(file, save=True, show=True)
-    img = results[0].orig_img
-    # only one result should be in the image
-    for i, box in enumerate(results[0].boxes):
-        # Get bounding box in (x1, y1, x2, y2) format
-        x1, y1, x2, y2 = map(int, box.xyxy[0])  # Convert to int
-
-        # Crop the image
-        cropped = img[(y1):(y2), (x1):(x2)]
-
-        # Save or display the crop
-        cv2.imwrite(f"crop_{i}.jpg", cropped)
-
-        return cropped
-
-
-def zoom_in(img_cpy, bounding_box, ratio):
-
-    receipt = four_point_transform(img_cpy, bounding_box * ratio)
-    cv2.imshow("Receipt", receipt)
-    return receipt
-
 
 def tesseract_ocr(receipt):
 
@@ -53,6 +27,7 @@ def tesseract_ocr(receipt):
     draw_tesseract_bounding_boxes(receipt)
 
     return text
+
 
 # DEBUG
 #  for visualization purposes (understanding the ocr)
@@ -86,8 +61,10 @@ def easy_ocr(receipt):
 
     reader = easyocr.Reader(["ro"], gpu=False)
     data = reader.readtext(receipt, decoder="beamsearch", link_threshold=0.8)
+
     # DEBUG
     # print(data)
+
     text_data = []
 
     for bbox, text, score in data:
@@ -103,7 +80,7 @@ def extract_text(receipt, mode):
     Extracts text from the receipt using OCR.
     :param receipt: The receipt image in cv2 (numpy array) format.
     :param mode: The OCR engine to use (use constant EASYOCR or TESSERACT).
-    :return: Extracted and processed string.
+    :return: The raw text extracted from the receipt.
     """
 
     text = ""
@@ -112,23 +89,4 @@ def extract_text(receipt, mode):
     elif mode == TESSERACT:
         text = tesseract_ocr(receipt)
 
-    return process_text(text)
-
-
-def process_text(text):
-    """
-    Finds the first list element containing total (but not TVA), using regex.
-    Assumes amount is at position to the right from total found.
-    :param text: list of strings
-    :return: the amount
-    """
-
-    pattern = r"^(?!.*TVA).*total.*$"
-    amount = r"\d[.,]\d{2}"
-
-    for i in range(0, len(text)):
-        if re.search(pattern, text[i], re.IGNORECASE):
-            modified_text = text[i + 1].replace(" ", "")
-            if re.search(amount, modified_text, re.IGNORECASE):
-                return modified_text
-            return modified_text + "." + text[i + 2]
+    return text

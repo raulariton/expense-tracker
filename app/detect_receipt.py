@@ -9,6 +9,12 @@ from torchvision.models.segmentation import (
     deeplabv3_mobilenet_v3_large,
 )
 
+from app.classes.exceptions import (
+    SegmentationModelError,
+    EdgeDetectionError,
+    PerspectiveTransformationError,
+)
+
 # constants
 IMAGE_RESIZE_FOR_DETECTION = 384
 method = "MobilenetV3-Large"
@@ -96,8 +102,10 @@ def scan(
         try:
             out = trained_model(image_model)["out"].cpu()
         except RuntimeError:
-            raise RuntimeError(
-                "Unable to get segmentation mask. Please check the model."
+            raise SegmentationModelError(
+                "Unable to get a segmentation mask. Segmentation model is not "
+                "loaded "
+                "correctly."
             )
 
     del image_model
@@ -140,7 +148,7 @@ def scan(
     contours, _ = cv2.findContours(canny, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
     if not contours:
-        raise ValueError("Unable to detect receipt contour")
+        raise EdgeDetectionError("Unable to find any contours in the image.")
 
     # save largest contour as `receipt`
     receipt = sorted(contours, key=cv2.contourArea, reverse=True)[0]
@@ -245,7 +253,9 @@ def scan(
             np.float32(corners), np.float32(destination_corners)
         )
     except cv2.error:
-        raise RuntimeError("Unable to get perspective transformation matrix.")
+        raise PerspectiveTransformationError(
+            "Unable to get perspective transformation matrix."
+        )
 
     # apply the perspective transformation
     # on the original image
@@ -257,7 +267,9 @@ def scan(
             flags=cv2.INTER_LANCZOS4,
         )
     except cv2.error:
-        raise RuntimeError("Unable to apply perspective transformation.")
+        raise PerspectiveTransformationError(
+            "Unable to apply perspective transformation to image."
+        )
 
     # clip the pixel values to be in the range [0, 255]
     perpsective_transformed = np.clip(perpsective_transformed, a_min=0, a_max=255)
@@ -322,15 +334,17 @@ def load_model(num_classes=2, model_name="mbv3", device=torch.device("cpu")):
         )
     else:
         model = deeplabv3_resnet50(num_classes=num_classes, aux_loss=True)
-        checkpoint_path = os.path.join(os.getcwd(), "app", "models", "model_r50_iou_mix_2C020.pth")
+        checkpoint_path = os.path.join(
+            os.getcwd(), "app", "models", "model_r50_iou_mix_2C020.pth"
+        )
 
     model.to(device)
 
     try:
         checkpoints = torch.load(checkpoint_path, map_location=device)
     except RuntimeError:
-        raise RuntimeError(
-            "Unable to load model. Please check the checkpoint (.pth) path."
+        raise SegmentationModelError(
+            "Unable to load segmentation model. Check the checkpoint (.pth) path."
         )
     model.load_state_dict(checkpoints, strict=False)
     model.eval()
