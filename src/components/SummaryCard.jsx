@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/SummaryCard.css";
-
+//layout for summ
 const SummaryCard = ({ icon, title, amount, subtitle }) => {
   return (
     <div className="summary-card">

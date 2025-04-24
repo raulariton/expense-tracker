@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/ActivityItem.css";
-
+//card layout for activ items
 const ActivityItem = ({ icon, name, time, amount }) => {
   return (
     <div className="activity-item">

@@ -1,0 +1,108 @@
+.settings-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 20px;
+  }
+  
+  .profile-card,
+  .settings-form {
+    background: #fff;
+    padding: 32px;
+    border-radius: 10px;
+    max-width: 480px;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .profile-card h2,
+  .settings-form h2 {
+    color: #2563eb;
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+  }
+  
+  .profile-card p {
+    font-size: 0.95rem;
+    color: #444;
+    margin-bottom: 4px;
+  }
+  
+  .edit-btn {
+    margin-top: 12px;
+    padding: 10px;
+    background-color: #2563eb;
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+  
+  .edit-btn:hover {
+    background-color: #1a47c8;
+  }
+  
+  .settings-form label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.95rem;
+    color: #444;
+  }
+  
+  .settings-form input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    margin-top: 6px;
+  }
+  
+  .readonly-info {
+    font-size: 0.9rem;
+    color: #777;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  
+  .save-btn {
+    background-color: #2563eb;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  
+  .save-btn:hover {
+    background-color: #1a47c8;
+  }
+  
+  .cancel-btn {
+    background-color: #ccc;
+    color: #333;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #bbb;
+  }
+  

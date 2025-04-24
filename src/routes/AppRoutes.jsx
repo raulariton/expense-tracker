@@ -4,6 +4,8 @@ import Auth from "../pages/Auth";
 import Dashboard from "../pages/Dashboard";
 import AddExpense from "../pages/AddExpense";
 import Statistics from "../pages/Statistics";
+import Home from "../pages/Home";
+import Settings from "../pages/Settings";
 
 const AppRoutes = ({ isAuthenticated }) => {
   isAuthenticated=true; //for testing purposes
@@ -11,7 +13,8 @@ const AppRoutes = ({ isAuthenticated }) => {
     <Routes>
       {/* Public route */}
       <Route path="/auth" element={<Auth />} />
-
+      {/* Public route */}
+      <Route path="/Homepage" element={<Home />} />
       {/* Protected Routes */}
       <Route
         path="/dashboard"
@@ -25,9 +28,14 @@ const AppRoutes = ({ isAuthenticated }) => {
         path="/statistics"
         element={isAuthenticated ? <Statistics /> : <Navigate to="/auth" />}
       />
+       <Route
+        path="/Settings"
+        element={isAuthenticated ? <Settings /> : <Navigate to="/auth" />}
+      />
+      
 
       {/* Fallback redirect */}
-      <Route path="*" element={<Navigate to="/auth" />} />
+      <Route path="*" element={<Navigate to="/Homepage" />} />
     </Routes>
   );
 };

@@ -250,3 +250,14 @@
     margin-top: 4px;
   }
 }
+
+.hide-on-mobile {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .hide-on-mobile {
+    display: none;
+  }
+}
+

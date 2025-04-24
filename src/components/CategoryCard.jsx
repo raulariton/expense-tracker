@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/CategoryCard.css";
-
+//card layout for catg items
 const CategoryCard = ({ icon, title, amount }) => {
   return (
     <div className="category-card">
