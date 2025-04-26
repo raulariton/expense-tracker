@@ -68,7 +68,8 @@
   }
   
   .scan-placeholder {
-    text-align: center;
+    display: flex;
+    justify-content: center;
     padding: 40px;
     background-color: #f3f3f3;
     border-radius: 8px;
