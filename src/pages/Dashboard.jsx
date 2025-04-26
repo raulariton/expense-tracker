@@ -3,44 +3,123 @@ import MainLayout from "../layouts/MainLayout";
 import SummaryCard from "../components/SummaryCard";
 import CategoryCard from "../components/CategoryCard";
 import ActivityItem from "../components/ActivityItem";
+import { useNavigate } from "react-router-dom";
+import {
+  FaCamera,
+  FaCalendarAlt,
+  FaUtensils,
+  FaShoppingBag,
+  FaCar,
+  FaFileInvoice,
+  FaTag
+} from "react-icons/fa";
 
-import { FaCamera, FaCalendarAlt, FaUtensils, FaShoppingBag, FaCar, FaFileInvoice } from "react-icons/fa";
-import data from "../data/demodata.json";
 import "../styles/dashboard.css";
 
-// Map string icon name → actual icon component
 const iconMap = {
-  food: <FaUtensils />,
+  utensils: <FaUtensils />,
   shopping: <FaShoppingBag />,
   transport: <FaCar />,
-  bills: <FaFileInvoice />
+  invoice: <FaFileInvoice />,
+  tag: <FaTag />
 };
 
 const Dashboard = () => {
-  const { summary, categories, recent } = data;
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const db = JSON.parse(localStorage.getItem("appData"));
+
+  if (!currentUser || !db) {
+    return (
+      <MainLayout>
+        <div className="dashboard">
+          <p>Please log in to view your dashboard.</p>
+        </div>
+      </MainLayout>
+    );
+  }
+  const navigate = useNavigate();
+
+const goToAddExpense = () => {
+  navigate("/add-expense");
+};
+
+
+  const userExpenses = db.expenses.filter((e) => e.user_id === currentUser.id);
+
+  const todayDate = new Date().toISOString().split("T")[0];
+
+  const summary = {
+    total: userExpenses.reduce((acc, e) => acc + e.amount, 0).toFixed(2),
+    today: userExpenses
+      .filter((e) => e.date.startsWith(todayDate))
+      .reduce((acc, e) => acc + e.amount, 0)
+      .toFixed(2),
+    week: userExpenses
+      .filter((e) => {
+        const date = new Date(e.date);
+        const today = new Date();
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(today.getDate() - 7);
+        return date >= oneWeekAgo && date <= today;
+      })
+      .reduce((acc, e) => acc + e.amount, 0)
+      .toFixed(2)
+  };
+
+  const recent = userExpenses
+    .slice(-5)
+    .reverse()
+    .map((e) => ({
+      name: e.description,
+      amount: e.amount,
+      time: new Date(e.date).toLocaleString(),
+      icon: db.categories.find((c) => c.id === e.category_id)?.icon || "tag"
+    }));
+
+  const categoryTotals = db.categories.map((cat) => {
+    const total = userExpenses
+      .filter((e) => e.category_id === cat.id)
+      .reduce((acc, e) => acc + e.amount, 0)
+      .toFixed(2);
+    return { title: cat.name, amount: total, icon: cat.icon };
+  });
 
   return (
     <MainLayout>
       <div className="dashboard">
-        {/* Summary */}
+        {/* Summary Cards */}
         <div className="summary-cards">
-          <SummaryCard title="Total Spent" amount={`$${summary.total}`} subtitle="This month" icon={<FaCalendarAlt />} />
-          <SummaryCard title="Spent Today" amount={`$${summary.today}`} subtitle="Today" icon={<FaCalendarAlt />} />
-          <SummaryCard title="This Week" amount={`$${summary.week}`} subtitle="April 7 – April 13" icon={<FaCalendarAlt />} />
+          <SummaryCard
+            title="Total Spent"
+            amount={`$${summary.total}`}
+            subtitle="This month"
+            icon={<FaCalendarAlt />}
+          />
+          <SummaryCard
+            title="Spent Today"
+            amount={`$${summary.today}`}
+            subtitle="Today"
+            icon={<FaCalendarAlt />}
+          />
+          <SummaryCard
+            title="This Week"
+            amount={`$${summary.week}`}
+            subtitle="Last 7 Days"
+            icon={<FaCalendarAlt />}
+          />
         </div>
 
-        {/* Actions */}
+        {/* Action Buttons */}
         <div className="dashboard-actions">
-          <button className="btn-primary">
-            
-            Add expense
+          <button className="btn-primary" onClick={goToAddExpense}>
+            <FaCamera className="btn-icon" />
+            Add Expense
           </button>
-         
         </div>
 
         {/* Categories */}
         <div className="category-cards">
-          {categories.map((cat, i) => (
+          {categoryTotals.map((cat, i) => (
             <CategoryCard
               key={i}
               title={cat.title}
@@ -50,7 +129,7 @@ const Dashboard = () => {
           ))}
         </div>
 
-        {/* Activity */}
+        {/* Recent Activity */}
         <div className="activity-card">
           <h3>Recent Activity</h3>
           <div className="activity-list">
@@ -60,7 +139,7 @@ const Dashboard = () => {
                 icon={iconMap[item.icon]}
                 name={item.name}
                 time={item.time}
-                amount={`$${item.amount}`}
+                amount={`-$${item.amount}`}
               />
             ))}
           </div>

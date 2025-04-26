@@ -1,48 +1,50 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaUser, FaGlobe } from "react-icons/fa";
+import { useLanguage } from "../context/LanguageContext";
 import "../styles/Navbar.css";
-
+//Navbar layout
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { currentLangCode, setLanguage, lang } = useLanguage();
+
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [language, setLanguage] = useState("en");
 
-  const isAuthenticated = true; // testing
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const isAuthenticated = !!currentUser;
 
   const isActive = (path) => location.pathname === path;
 
-  const handleLanguageSwitch = (lang) => {
-    setLanguage(lang);
-    // getLanguage.js // 
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    navigate("/auth");
   };
 
   return (
     <nav className="navbar">
-      {/* Logo */}
       <div className="navbar-left">
         <Link to="/" className="navbar-logo">
-          testing
+          ExpenseTracker
         </Link>
       </div>
 
       {isAuthenticated && (
         <>
-          {/* Links (desktop) */}
+          {/* Desktop Links */}
           <div className="navbar-links">
             <Link to="/dashboard" className={isActive("/dashboard") ? "active" : ""}>
-              Dashboard
+              {lang.navbar.dashboard}
             </Link>
             <Link to="/add-expense" className={isActive("/add-expense") ? "active" : ""}>
-              Add Expense
+              {lang.navbar.addExpense}
             </Link>
             <Link to="/statistics" className={isActive("/statistics") ? "active" : ""}>
-              Statistics
+              {lang.navbar.statistics}
             </Link>
           </div>
 
-          {/* Right section: profile and language */}
           <div className="navbar-right">
             <div className="profile-container">
               <button
@@ -50,12 +52,14 @@ const Navbar = () => {
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
               >
                 <FaUser className="icon" />
-                Profile
+                {lang.navbar.profile}
               </button>
               {showProfileMenu && (
                 <div className="profile-dropdown">
-                  <Link to="/settings">Settings</Link>
-                  <Link to="/auth">Logout</Link>
+                  <Link to="/settings">{lang.navbar.settings}</Link>
+                  <Link to="/auth" onClick={handleLogout} className="logout-btn">
+                    {lang.navbar.logout}
+                  </Link>
                 </div>
               )}
             </div>
@@ -64,8 +68,8 @@ const Navbar = () => {
               <FaGlobe className="icon" />
               <select
                 className="lang-dropdown"
-                value={language}
-                onChange={(e) => handleLanguageSwitch(e.target.value)}
+                value={currentLangCode}
+                onChange={(e) => setLanguage(e.target.value)}
               >
                 <option value="en">EN</option>
                 <option value="ro">RO</option>
@@ -73,31 +77,31 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Hamburger (always visible on mobile) */}
           <button className="hamburger" onClick={() => setShowMobileMenu(!showMobileMenu)}>
             ☰
           </button>
 
-          {/* Mobile menu */}
           {showMobileMenu && (
             <div className="mobile-menu-panel">
-              <Link to="/dashboard">Dashboard</Link>
-              <Link to="/add-expense">Add Expense</Link>
-              <Link to="/statistics">Statistics</Link>
-              <Link to="/settings">Settings</Link>
-              <Link to="/auth">Logout</Link>
+              <Link to="/dashboard">{lang.navbar.dashboard}</Link>
+              <Link to="/add-expense">{lang.navbar.addExpense}</Link>
+              <Link to="/statistics">{lang.navbar.statistics}</Link>
+              <Link to="/settings">{lang.navbar.settings}</Link>
+              <Link to="/auth" onClick={handleLogout} className="logout-btn">
+                {lang.navbar.logout}
+              </Link>
               <hr className="divider" />
               <div className="mobile-lang-switch">
-                <span><FaGlobe className="icon" /> Language:</span>
+                <span><FaGlobe className="icon" /> {lang.navbar.language}:</span>
                 <button
-                  onClick={() => handleLanguageSwitch("ro")}
-                  className={language === "ro" ? "active-lang" : ""}
+                  onClick={() => setLanguage("ro")}
+                  className={currentLangCode === "ro" ? "active-lang" : ""}
                 >
                   RO
                 </button>
                 <button
-                  onClick={() => handleLanguageSwitch("en")}
-                  className={language === "en" ? "active-lang" : ""}
+                  onClick={() => setLanguage("en")}
+                  className={currentLangCode === "en" ? "active-lang" : ""}
                 >
                   EN
                 </button>
@@ -108,20 +112,50 @@ const Navbar = () => {
       )}
 
       {!isAuthenticated && (
-        <div className="navbar-right">
-          <Link to="/auth" className="login-link">Login</Link>
-          <div className="lang-container">
-            <FaGlobe className="icon" />
-            <select
-              className="lang-dropdown"
-              value={language}
-              onChange={(e) => handleLanguageSwitch(e.target.value)}
-            >
-              <option value="en">EN</option>
-              <option value="ro">RO</option>
-            </select>
+        <>
+          {/* Desktop for non-authenticated */}
+          <div className="navbar-right hide-on-mobile">
+            <Link to="/auth" className="login-link">{lang.navbar.login}</Link>
+            <div className="lang-container">
+              <FaGlobe className="icon" />
+              <select
+                className="lang-dropdown"
+                value={currentLangCode}
+                onChange={(e) => setLanguage(e.target.value)}
+              >
+                <option value="en">EN</option>
+                <option value="ro">RO</option>
+              </select>
+            </div>
           </div>
-        </div>
+
+          {/* Mobile version */}
+          <button className="hamburger" onClick={() => setShowMobileMenu(!showMobileMenu)}>
+            ☰
+          </button>
+
+          {showMobileMenu && (
+            <div className="mobile-menu-panel">
+              <Link to="/auth">{lang.navbar.login}</Link>
+              <hr className="divider" />
+              <div className="mobile-lang-switch">
+                <span><FaGlobe className="icon" /> {lang.navbar.language}:</span>
+                <button
+                  onClick={() => setLanguage("ro")}
+                  className={currentLangCode === "ro" ? "active-lang" : ""}
+                >
+                  RO
+                </button>
+                <button
+                  onClick={() => setLanguage("en")}
+                  className={currentLangCode === "en" ? "active-lang" : ""}
+                >
+                  EN
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </nav>
   );

@@ -1,0 +1,97 @@
+/* src/styles/Home.css */
+
+.home-page {
+  background-color: #f8f9fb;
+  padding: 40px 32px;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.home-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+
+.home-image-block img {
+  width: 500px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid red;
+}
+
+.home-text-block {
+  max-width: 500px;
+}
+
+.home-text-block h1 {
+  font-size: 2.5rem;
+  color: #2563eb;
+  margin-bottom: 16px;
+}
+
+.home-text-block p {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.Sec_home_hero {
+  
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap-reverse;
+  gap: 32px;
+}
+
+.Sec_home_text {
+  max-width: 500px;
+}
+
+.Sec_home_text h2 {
+  font-size: 2rem;
+  color: #2563eb;
+  margin-bottom: 12px;
+}
+
+.Sec_home_text ul {
+  list-style: disc;
+  padding-left: 20px;
+  color: #444;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.Sec_home_image img {
+  width: 520px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid red;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .home-hero, .Sec_home_hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .home-image-block img,
+  .Sec_home_image img {
+    width: 100%;
+    max-width: 90vw;
+  }
+
+  .home-text-block, .Sec_home_text {
+    max-width: 100%;
+  }
+}
