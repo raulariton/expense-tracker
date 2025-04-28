@@ -18,10 +18,8 @@ def tesseract_ocr(receipt):
 
     text = pytesseract.image_to_string(receipt, config=options).splitlines()
 
-    print("[INFO] raw output:")
-    print("==================")
+    # DEBUG
     print(text)
-    print("\n")
 
     # DEBUG
     draw_tesseract_bounding_boxes(receipt)
@@ -62,15 +60,17 @@ def easy_ocr(receipt):
     reader = easyocr.Reader(["ro"], gpu=False)
     data = reader.readtext(receipt, decoder="beamsearch", link_threshold=0.8)
 
-    # DEBUG
-    # print(data)
-
     text_data = []
 
+    # draw bounding boxes
+    # this modifies the original image in place
     for bbox, text, score in data:
         pts = np.array(bbox, dtype=np.int32)
         cv2.rectangle(receipt, pts[0], pts[2], (0, 255, 0), 2)
         text_data.append(text)
+
+    # DEBUG
+    print(text_data)
 
     return text_data
 

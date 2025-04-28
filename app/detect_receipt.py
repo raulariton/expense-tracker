@@ -55,6 +55,19 @@ def image_preprocess_transforms(
 
 preprocess_transforms = image_preprocess_transforms()
 
+def rotate(image):
+    def is_rotated(image):
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        proj_h = np.sum(gray, axis=1)
+        proj_v = np.sum(gray, axis=0)
+        return np.std(proj_v) > np.std(proj_h)
+
+    if is_rotated(image):
+        # Rotate the image 90 degrees clockwise
+        image = cv2.rotate(image, cv2.ROTATE_90_COUNTERCLOCKWISE)
+
+    return image
+
 
 def detect_receipt(image):
     # load detection model
