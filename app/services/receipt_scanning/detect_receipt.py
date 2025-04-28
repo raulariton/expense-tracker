@@ -343,7 +343,7 @@ def load_model(num_classes=2, model_name="mbv3", device=torch.device("cpu")):
     if model_name == "mbv3":
         model = deeplabv3_mobilenet_v3_large(num_classes=num_classes, aux_loss=True)
         checkpoint_path = os.path.join(
-            os.getcwd(), "app", "models", "model_mbv3_iou_mix_2C049.pth"
+            os.getcwd(), "app", "resources", "ml_models", "model_mbv3_iou_mix_2C049.pth"
         )
     else:
         model = deeplabv3_resnet50(num_classes=num_classes, aux_loss=True)

@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import date, time
 
 class Expense(BaseModel):
     """
@@ -9,9 +10,12 @@ class Expense(BaseModel):
     :param date: Date of the expense, optional field.
     """
 
-    total: float
-    vendor: Optional[str] = None
-    date: Optional[str] = None
+    vendor: Optional[str]
+    # NOTE: if category is not found, implementation sets it as "Other"
+    category: str
+    total: Optional[float]
+    date: Optional[date]
+    time: Optional[time]
 
 
 class APIResponse(BaseModel):
@@ -21,4 +25,4 @@ class APIResponse(BaseModel):
     """
 
     status_code: int
-    receipt_data: Expense
+    expense_data: Expense
