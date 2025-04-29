@@ -83,6 +83,8 @@ h1 {
 
 .scan-section {
   flex: 1;
+  flex-grow: 2;
+  justify-content: center;
   min-width: 300px;
   background-color: #fff;
   padding: 24px;
@@ -94,6 +96,7 @@ h1 {
 }
 
 .upload-area {
+  flex: 1;
   position: relative;
   width: 100%;
   height: 320px;
@@ -111,6 +114,18 @@ h1 {
   display: none;
 }
 
+.or-text {
+  font-size: 1.2rem;
+  color: #999;
+  margin: 0 16px;
+  font-weight: 500;
+  align-self: center;
+}
+
+.or-text input[type="file"] {
+  display: none;
+}
+
 .upload-content {
   font-size: 1rem;
   color: #2563eb;
@@ -123,7 +138,7 @@ h1 {
   border-radius: 6px;
   overflow: hidden;
   height: 320px;
-  width: 240px;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -134,6 +149,7 @@ h1 {
   height: 100%;
   width: auto;
   object-fit: contain;
+  align-self: center;
 }
 
 .btn-submit-api {
@@ -151,8 +167,8 @@ h1 {
   background-color: #1a47c8;
 }
 
-/* Barcode box (hidden after upload) */
-.barcode-placeholder {
+/* QR code box (hidden after upload) */
+.qrcode-placeholder {
   flex: 1;
   min-width: 280px;
   background-color: #fff;
@@ -162,12 +178,12 @@ h1 {
   text-align: center;
 }
 
-.barcode-placeholder p {
+.qrcode-placeholder p {
   font-size: 14px;
   color: #555;
 }
 
-.barcode-box {
+.qrcode-box {
   margin-top: 16px;
   background-color: #f0f0f0;
   height: 160px;
@@ -177,20 +193,36 @@ h1 {
   color: #333;
 }
 
-/* OCR details shown in place of barcode */
-.ocr-details {
+/* OCR details shown in place of QR code */
+.ocr-results-container {
   flex: 1;
+  flex-grow: 1;
   min-width: 280px;
   background-color: #fff;
   padding: 24px;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   display: flex;
+  justify-content: center;
   flex-direction: column;
   gap: 14px;
 }
 
+.ocr-details {
+  align-items: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ocr-results-container .loader {
+  align-self: center;
+  justify-self: center;
+}
+
 .ocr-details h2 {
+  width: 100%;
   font-size: 1.2rem;
   color: #2563eb;
 }
@@ -200,6 +232,7 @@ h1 {
   flex-direction: column;
   font-size: 0.95rem;
   color: #444;
+  width: 100%;
 }
 
 .ocr-details input,
@@ -220,6 +253,8 @@ h1 {
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
+  width: 100%;
+  justify-content: center;
 }
 
 .ocr-details .btn-primary:hover {
