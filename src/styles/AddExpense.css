@@ -1,0 +1,262 @@
+.add-expense-container {
+  background-color: #f8f9fb;
+  padding: 32px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h1 {
+  font-size: 2rem;
+  color: #2563eb;
+  margin-bottom: 24px;
+}
+
+.tabs {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.tab {
+  padding: 10px 18px;
+  border-radius: 8px;
+  background-color: #e6ecf5;
+  color: #333;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.tab.active {
+  background-color: #2563eb;
+  color: white;
+}
+
+.expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #fff;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.expense-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.95rem;
+  color: #444;
+}
+
+.expense-form input,
+.expense-form select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-top: 6px;
+  font-size: 0.95rem;
+}
+
+.submit-btn {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 12px;
+}
+
+.submit-btn:hover {
+  background-color: #1a47c8;
+}
+
+.scan-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.scan-section {
+  flex: 1;
+  flex-grow: 2;
+  justify-content: center;
+  min-width: 300px;
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.upload-area {
+  flex: 1;
+  position: relative;
+  width: 100%;
+  height: 320px;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-area input[type="file"] {
+  display: none;
+}
+
+.or-text {
+  font-size: 1.2rem;
+  color: #999;
+  margin: 0 16px;
+  font-weight: 500;
+  align-self: center;
+}
+
+.or-text input[type="file"] {
+  display: none;
+}
+
+.upload-content {
+  font-size: 1rem;
+  color: #2563eb;
+  font-weight: 600;
+  text-align: center;
+}
+
+.preview-container {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 320px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fafafa;
+}
+
+.receipt-preview {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  align-self: center;
+}
+
+.btn-submit-api {
+  padding: 10px 16px;
+  background-color: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.btn-submit-api:hover {
+  background-color: #1a47c8;
+}
+
+/* QR code box (hidden after upload) */
+.qrcode-placeholder {
+  flex: 1;
+  min-width: 280px;
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.qrcode-placeholder p {
+  font-size: 14px;
+  color: #555;
+}
+
+.qrcode-box {
+  margin-top: 16px;
+  background-color: #f0f0f0;
+  height: 160px;
+  border-radius: 8px;
+  line-height: 160px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* OCR details shown in place of QR code */
+.ocr-results-container {
+  flex: 1;
+  flex-grow: 1;
+  min-width: 280px;
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ocr-details {
+  align-items: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ocr-results-container .loader {
+  align-self: center;
+  justify-self: center;
+}
+
+.ocr-details h2 {
+  width: 100%;
+  font-size: 1.2rem;
+  color: #2563eb;
+}
+
+.ocr-details label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.95rem;
+  color: #444;
+  width: 100%;
+}
+
+.ocr-details input,
+.ocr-details select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  margin-top: 6px;
+}
+
+.ocr-details .btn-primary {
+  padding: 10px 16px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  width: 100%;
+  justify-content: center;
+}
+
+.ocr-details .btn-primary:hover {
+  background-color: #1a47c8;
+}

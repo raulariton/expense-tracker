@@ -1,0 +1,31 @@
+/* Reset + Base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    overflow-x: hidden;
+
+  }
+  
+  /* General layout wrapper for page content */
+  .page-content {
+    width: 90%;
+    margin-top: 70px;
+    max-width: 1200px;
+    margin: 40px auto;               /* Top and bottom spacing + center horizontally */
+    min-height: calc(100vh - 160px); /* Leaves room for navbar + footer */
+    padding-top: 40px;
+    padding-left: 20px;
+    padding-bottom: 40px;
+    
+  }
+  
