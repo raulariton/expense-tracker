@@ -17,7 +17,7 @@ from app.classes.exceptions import (
 
 # constants
 IMAGE_RESIZE_FOR_DETECTION = 384
-method = "MobilenetV3-Large"
+MODEL_METHOD = "MobilenetV3-Large"
 
 # DEBUG for visualization
 import matplotlib.pyplot as plt
@@ -71,10 +71,7 @@ def rotate(image):
 
 def detect_receipt(image):
     # load detection model
-    if method == "MobilenetV3-Large":
-        model = load_model(model_name="mbv3")
-    else:
-        model = load_model(model_name="r50")
+    model = load_model()
 
     # scan for receipt
     receipt = scan(image, trained_model=model)
@@ -338,18 +335,11 @@ def find_dest(pts):
 
     return order_points(destination_corners)
 
-
-def load_model(num_classes=2, model_name="mbv3", device=torch.device("cpu")):
-    if model_name == "mbv3":
-        model = deeplabv3_mobilenet_v3_large(num_classes=num_classes, aux_loss=True)
-        checkpoint_path = os.path.join(
-            os.getcwd(), "app", "resources", "ml_models", "model_mbv3_iou_mix_2C049.pth"
-        )
-    else:
-        model = deeplabv3_resnet50(num_classes=num_classes, aux_loss=True)
-        checkpoint_path = os.path.join(
-            os.getcwd(), "app", "models", "model_r50_iou_mix_2C020.pth"
-        )
+def load_model(num_classes=2, device=torch.device("cpu")):
+    model = deeplabv3_mobilenet_v3_large(num_classes=num_classes, aux_loss=True)
+    checkpoint_path = os.path.join(
+        os.getcwd(), "app", "resources", "ml_models", "model_mbv3_iou_mix_2C049.pth"
+    )
 
     model.to(device)
 

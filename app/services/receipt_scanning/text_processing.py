@@ -155,6 +155,10 @@ def get_expense_from_llm_response(llm_response: str) -> Expense:
 def process_text(ocr_text: str) -> Expense:
 
     llm_response = llm_process_text(ocr_text)
+
+    # DEBUG
+    print(llm_response)
+
     expense = get_expense_from_llm_response(llm_response)
 
     return expense
