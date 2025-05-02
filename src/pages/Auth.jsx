@@ -76,10 +76,10 @@ const Auth = () => {
               {lang.auth.loginTab}
             </button>
             <button
-              className={activeTab === "signup" ? "active" : ""}
-              onClick={() => setActiveTab("signup")}
+              className={activeTab === "register" ? "active" : ""}
+              onClick={() => setActiveTab("register")}
             >
-              {lang.auth.signupTab}
+              {lang.auth.registerTab}
             </button>
           </div>
 
@@ -108,7 +108,8 @@ const Auth = () => {
                 </button>
               </form>
             ) : (
-              <form className="auth-form" onSubmit={handleSignup}>
+              // registration form
+              <form className="auth-form" onSubmit={handleRegister}>
                 <input
                   type="email"
                   placeholder={lang.auth.email}

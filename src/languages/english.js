@@ -55,7 +55,7 @@ export default {
   },
   auth: {
     loginTab: "Login",
-    signupTab: "Sign Up",
+    registerTab: "Register",
     email: "Email",
     password: "Password",
     confirmPassword: "Confirm Password",
