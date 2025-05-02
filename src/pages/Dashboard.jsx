@@ -4,6 +4,7 @@ import SummaryCard from "../components/SummaryCard";
 import CategoryCard from "../components/CategoryCard";
 import ActivityItem from "../components/ActivityItem";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../App.jsx";
 import {
   FaCamera,
   FaCalendarAlt,
@@ -11,7 +12,7 @@ import {
   FaShoppingBag,
   FaCar,
   FaFileInvoice,
-  FaTag
+  FaTag,
 } from "react-icons/fa";
 
 import "../styles/dashboard.css";
@@ -21,14 +22,17 @@ const iconMap = {
   shopping: <FaShoppingBag />,
   transport: <FaCar />,
   invoice: <FaFileInvoice />,
-  tag: <FaTag />
+  tag: <FaTag />,
 };
 
 const Dashboard = () => {
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  const db = JSON.parse(localStorage.getItem("appData"));
+  const navigate = useNavigate();
 
-  if (!currentUser || !db) {
+  const isAuthenticated = useContext(AuthContext);
+
+  if (!isAuthenticated) {
+    // TODO: Redirect to login page, and then back to dashboard
+    //  (proper handling)
     return (
       <MainLayout>
         <div className="dashboard">

@@ -48,17 +48,17 @@ const Statistics = () => {
 
   const dailyTotals = {};
   userExpenses.forEach(e => {
-    const date = e.date.split("T")[0];
+    const date = e.date_time.split("T")[0];
     dailyTotals[date] = (dailyTotals[date] || 0) + e.amount;
   });
 
   const dailyChartData = Object.entries(dailyTotals)
-    .map(([date, value]) => ({ date, value }))
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
+    .map(([date, value]) => ({ date_time: date, value }))
+    .sort((a, b) => new Date(a.date_time) - new Date(b.date_time));
 
   const groupedExpenses = {};
   userExpenses.forEach(expense => {
-    const date = expense.date.split("T")[0];
+    const date = expense.date_time.split("T")[0];
     if (!groupedExpenses[date]) {
       groupedExpenses[date] = [];
     }

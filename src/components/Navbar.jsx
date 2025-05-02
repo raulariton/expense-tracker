@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaUser, FaGlobe } from "react-icons/fa";
 import { useLanguage } from "../context/LanguageContext";
 import "../styles/Navbar.css";
-//Navbar layout
+import { AuthContext } from "../App.jsx";
+
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -12,14 +13,14 @@ const Navbar = () => {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  const isAuthenticated = !!currentUser;
+  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
 
   const isActive = (path) => location.pathname === path;
 
   const handleLogout = () => {
-    localStorage.removeItem("currentUser");
-    navigate("/auth");
+    localStorage.removeItem("access_token");
+    setIsAuthenticated(false);
+    navigate("/");
   };
 
   return (
@@ -34,13 +35,22 @@ const Navbar = () => {
         <>
           {/* Desktop Links */}
           <div className="navbar-links">
-            <Link to="/dashboard" className={isActive("/dashboard") ? "active" : ""}>
+            <Link
+              to="/dashboard"
+              className={isActive("/dashboard") ? "active" : ""}
+            >
               {lang.navbar.dashboard}
             </Link>
-            <Link to="/add-expense" className={isActive("/add-expense") ? "active" : ""}>
+            <Link
+              to="/add-expense"
+              className={isActive("/add-expense") ? "active" : ""}
+            >
               {lang.navbar.addExpense}
             </Link>
-            <Link to="/statistics" className={isActive("/statistics") ? "active" : ""}>
+            <Link
+              to="/statistics"
+              className={isActive("/statistics") ? "active" : ""}
+            >
               {lang.navbar.statistics}
             </Link>
           </div>
@@ -57,7 +67,11 @@ const Navbar = () => {
               {showProfileMenu && (
                 <div className="profile-dropdown">
                   <Link to="/settings">{lang.navbar.settings}</Link>
-                  <Link to="/auth" onClick={handleLogout} className="logout-btn">
+                  <Link
+                    to="/auth"
+                    onClick={handleLogout}
+                    className="logout-btn"
+                  >
                     {lang.navbar.logout}
                   </Link>
                 </div>
@@ -77,7 +91,10 @@ const Navbar = () => {
             </div>
           </div>
 
-          <button className="hamburger" onClick={() => setShowMobileMenu(!showMobileMenu)}>
+          <button
+            className="hamburger"
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+          >
             ☰
           </button>
 
@@ -92,7 +109,9 @@ const Navbar = () => {
               </Link>
               <hr className="divider" />
               <div className="mobile-lang-switch">
-                <span><FaGlobe className="icon" /> {lang.navbar.language}:</span>
+                <span>
+                  <FaGlobe className="icon" /> {lang.navbar.language}:
+                </span>
                 <button
                   onClick={() => setLanguage("ro")}
                   className={currentLangCode === "ro" ? "active-lang" : ""}
@@ -115,7 +134,9 @@ const Navbar = () => {
         <>
           {/* Desktop for non-authenticated */}
           <div className="navbar-right hide-on-mobile">
-            <Link to="/auth" className="login-link">{lang.navbar.login}</Link>
+            <Link to="/auth" className="login-link">
+              {lang.navbar.login}
+            </Link>
             <div className="lang-container">
               <FaGlobe className="icon" />
               <select
@@ -130,7 +151,10 @@ const Navbar = () => {
           </div>
 
           {/* Mobile version */}
-          <button className="hamburger" onClick={() => setShowMobileMenu(!showMobileMenu)}>
+          <button
+            className="hamburger"
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+          >
             ☰
           </button>
 
@@ -139,7 +163,9 @@ const Navbar = () => {
               <Link to="/auth">{lang.navbar.login}</Link>
               <hr className="divider" />
               <div className="mobile-lang-switch">
-                <span><FaGlobe className="icon" /> {lang.navbar.language}:</span>
+                <span>
+                  <FaGlobe className="icon" /> {lang.navbar.language}:
+                </span>
                 <button
                   onClick={() => setLanguage("ro")}
                   className={currentLangCode === "ro" ? "active-lang" : ""}

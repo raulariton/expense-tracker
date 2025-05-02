@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "../styles/Auth.css";
 import MainLayout from "../layouts/MainLayout";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import axios from "axios";
+import { AuthContext } from "../App";
 
 const Auth = () => {
   const { lang } = useLanguage();
@@ -11,6 +12,7 @@ const Auth = () => {
   const [form, setForm] = useState({ email: "", password: "", confirm: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -41,6 +43,7 @@ const Auth = () => {
       localStorage.setItem("access_token", access_token);
 
       setError("");
+      setIsAuthenticated(true);
       navigate("/dashboard");
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -71,6 +74,7 @@ const Auth = () => {
       localStorage.setItem("access_token", access_token);
 
       setError("");
+      setIsAuthenticated(true);
       navigate("/dashboard");
     } catch (error) {
       if (error.response && error.response.status === 400) {

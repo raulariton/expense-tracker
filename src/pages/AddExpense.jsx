@@ -19,19 +19,12 @@ const AddExpense = () => {
     datetime: "",
   });
 
-  const [manual, setManual] = useState({
-    amount: "",
-    category: "Food & Dining",
-    vendor: "",
-    datetime: "",
-  });
-
   const categoryMap = {
     "Food & Dining": 1,
     Transport: 3,
     Shopping: 2,
     Bills: 4,
-    Other: 5
+    Other: 5,
   };
 
   const handleImageUpload = (e) => {
@@ -43,42 +36,47 @@ const AddExpense = () => {
     }
   };
 
-  const handleManualSubmit = (e) => {
+  const handleExpenseSubmit = async (e) => {
     e.preventDefault();
 
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    const db = JSON.parse(localStorage.getItem("appData"));
+    const token = localStorage.getItem("access_token");
 
-    const newExpense = {
-      id: Date.now(),
-      user_id: currentUser.id,
-      amount: parseFloat(manual.amount),
-      category_id: categoryMap[manual.category] || 5,
-      description: manual.vendor || "Manual Entry",
-      vendor: manual.vendor || "",
-      date: manual.datetime,
-      source: "manual",
-      receipt_img: "",
-      ocr_text: "",
-      created_at: new Date().toISOString(),
-    };
+    // submit request with token and expense data
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/receipt/submit",
+        receiptData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
-    db.expenses.push(newExpense);
-    localStorage.setItem("appData", JSON.stringify(db));
+      if (response.status === 200) {
+        // TODO: Display success message in frontend
+        alert("Expense added successfully!");
 
-    setManual({
-      amount: "",
-      category: "Food & Dining",
-      vendor: "",
-      datetime: "",
-    });
+        // reset expense form data
+        setReceiptData({
+          amount: "",
+          category: "Other",
+          vendor: "",
+          datetime: "",
+        });
+      }
+    } catch (error) {
+      // TODO: Display error in frontend
+      alert("Error submitting expense: " + error.message);
+      console.log(error);
+    }
   };
 
   const parseResponse = (apiResponse) => {
     const amount = apiResponse.expense_data.total;
     const category = apiResponse.expense_data.category;
     const vendor = apiResponse.expense_data.vendor;
-    const date = apiResponse.expense_data.date;
+    const date = apiResponse.expense_data.date_time;
     const time = apiResponse.expense_data.time;
 
     setReceiptData({
@@ -143,15 +141,15 @@ const AddExpense = () => {
         </div>
 
         {tab === "manual" && (
-          <form className="expense-form" onSubmit={handleManualSubmit}>
+          <form className="expense-form" onSubmit={handleExpenseSubmit}>
             <label>
               {lang.addExpense.amount}
               <input
                 type="number"
                 placeholder="0.00"
-                value={manual.amount}
+                value={receiptData.amount}
                 onChange={(e) =>
-                  setManual({ ...manual, amount: e.target.value })
+                  setReceiptData({ ...receiptData, amount: e.target.value })
                 }
                 required
               />
@@ -160,9 +158,9 @@ const AddExpense = () => {
             <label>
               {lang.addExpense.category}
               <select
-                value={manual.category}
+                value={receiptData.category}
                 onChange={(e) =>
-                  setManual({ ...manual, category: e.target.value })
+                  setReceiptData({ ...receiptData, category: e.target.value })
                 }
               >
                 <option>Food & Dining</option>
@@ -178,9 +176,9 @@ const AddExpense = () => {
               <input
                 type="text"
                 placeholder="Enter vendor name"
-                value={manual.vendor}
+                value={receiptData.vendor}
                 onChange={(e) =>
-                  setManual({ ...manual, vendor: e.target.value })
+                  setReceiptData({ ...receiptData, vendor: e.target.value })
                 }
               />
             </label>
@@ -189,9 +187,9 @@ const AddExpense = () => {
               {lang.addExpense.dateTime}
               <input
                 type="datetime-local"
-                value={manual.datetime}
+                value={receiptData.datetime}
                 onChange={(e) =>
-                  setManual({ ...manual, datetime: e.target.value })
+                  setReceiptData({ ...receiptData, datetime: e.target.value })
                 }
               />
             </label>
@@ -275,7 +273,7 @@ const AddExpense = () => {
                         onChange={(e) =>
                           setReceiptData({
                             ...receiptData,
-                            amount: e.target.value
+                            amount: e.target.value,
                           })
                         }
                       />
@@ -330,9 +328,7 @@ const AddExpense = () => {
 
                     <button
                       className="btn-primary"
-                      onClick={() => {
-                        console.log("Scanned Expense:", receiptData);
-                      }}
+                      onClick={handleExpenseSubmit}
                     >
                       {lang.addExpense.add}
                     </button>

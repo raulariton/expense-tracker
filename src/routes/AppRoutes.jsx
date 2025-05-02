@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Auth from "../pages/Auth";
 import Dashboard from "../pages/Dashboard";
@@ -6,15 +6,17 @@ import AddExpense from "../pages/AddExpense";
 import Statistics from "../pages/Statistics";
 import Home from "../pages/Home";
 import Settings from "../pages/Settings";
+import App, { AuthContext } from "../App";
 
-const AppRoutes = ({ isAuthenticated }) => {
-  isAuthenticated=true; //for testing purposes
+const AppRoutes = () => {
+  const { isAuthenticated } = useContext(AuthContext);
+
   return (
     <Routes>
-      {/* Public route */}
+      {/* Public routes */}
+      <Route path="/" element={isAuthenticated ? <Dashboard /> : <Home />} />
       <Route path="/auth" element={<Auth />} />
-      {/* Public route */}
-      <Route path="/Homepage" element={<Home />} />
+      <Route path="/home" element={<Home />} />
       {/* Protected Routes */}
       <Route
         path="/dashboard"
@@ -28,14 +30,13 @@ const AppRoutes = ({ isAuthenticated }) => {
         path="/statistics"
         element={isAuthenticated ? <Statistics /> : <Navigate to="/auth" />}
       />
-       <Route
-        path="/Settings"
+      <Route
+        path="/settings"
         element={isAuthenticated ? <Settings /> : <Navigate to="/auth" />}
       />
-      
 
       {/* Fallback redirect */}
-      <Route path="*" element={<Navigate to="/Homepage" />} />
+      <Route path="*" element={<Navigate to="/home" />} />
     </Routes>
   );
 };
