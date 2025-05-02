@@ -3,6 +3,7 @@ import "../styles/Auth.css";
 import MainLayout from "../layouts/MainLayout";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
+import axios from "axios";
 
 const Auth = () => {
   const { lang } = useLanguage();
@@ -23,45 +24,52 @@ const Auth = () => {
       (u) => u.email === form.email && u.passwordHash === form.password
     );
 
+    // if user is found
     if (user) {
       localStorage.setItem("currentUser", JSON.stringify(user));
       setError("");
       navigate("/");
     } else {
+      // if user is not found
       setError(lang.auth.errorInvalid);
     }
   };
 
-  const handleSignup = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    const db = JSON.parse(localStorage.getItem("appData"));
-    const existing = db.users.find((u) => u.email === form.email);
 
-    if (existing) {
-      setError(lang.auth.errorExists);
-      return;
-    }
-
+    // ensure the two passwords match
     if (form.password !== form.confirm) {
       setError(lang.auth.errorMismatch);
       return;
     }
 
-    const newUser = {
-      id: Date.now(),
-      email: form.email,
-      passwordHash: form.password,
-      name: "",
-      lastName: "",
-      createdAt: new Date().toISOString()
-    };
+    // submit to server
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/auth/register",
+        {
+          email: form.email,
+          password: form.password
+        }
+      )
 
-    db.users.push(newUser);
-    localStorage.setItem("appData", JSON.stringify(db));
-    localStorage.setItem("currentUser", JSON.stringify(newUser));
+      const access_token = response.data.access_token;
+      localStorage.setItem("access_token", access_token);
 
-    setError("");
-    navigate("/");
+      setError("");
+      navigate("/");
+
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        setError(lang.auth.errorExists);
+      }
+      else {
+        // TODO: Need to have specific text based on error
+        //  and not just error.message
+        setError(error.message);
+      }
+    }
   };
 
   return (
