@@ -17,21 +17,37 @@ const Auth = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const db = JSON.parse(localStorage.getItem("appData"));
-    const user = db.users.find(
-      (u) => u.email === form.email && u.passwordHash === form.password
-    );
 
-    // if user is found
-    if (user) {
-      localStorage.setItem("currentUser", JSON.stringify(user));
+    const formData = new FormData();
+    // have to use "username" because backend expects it
+    // in that format
+    formData.append("username", form.email);
+    formData.append("password", form.password);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/auth/token",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        },
+      );
+
+      const access_token = response.data.access_token;
+      localStorage.setItem("access_token", access_token);
+
       setError("");
-      navigate("/");
-    } else {
-      // if user is not found
-      setError(lang.auth.errorInvalid);
+      navigate("/dashboard");
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        setError(lang.auth.errorInvalid);
+      } else {
+        setError(error.message);
+      }
     }
   };
 
@@ -46,25 +62,20 @@ const Auth = () => {
 
     // submit to server
     try {
-      const response = await axios.post(
-        "http://localhost:8000/auth/register",
-        {
-          email: form.email,
-          password: form.password
-        }
-      )
+      const response = await axios.post("http://localhost:8000/auth/register", {
+        email: form.email,
+        password: form.password,
+      });
 
       const access_token = response.data.access_token;
       localStorage.setItem("access_token", access_token);
 
       setError("");
-      navigate("/");
-
+      navigate("/dashboard");
     } catch (error) {
       if (error.response && error.response.status === 400) {
         setError(lang.auth.errorExists);
-      }
-      else {
+      } else {
         // TODO: Need to have specific text based on error
         //  and not just error.message
         setError(error.message);
