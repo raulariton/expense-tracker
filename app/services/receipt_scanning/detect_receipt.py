@@ -9,7 +9,7 @@ from torchvision.models.segmentation import (
     deeplabv3_mobilenet_v3_large,
 )
 
-from app.classes.exceptions import (
+from app.models.exceptions import (
     SegmentationModelError,
     EdgeDetectionError,
     PerspectiveTransformationError,

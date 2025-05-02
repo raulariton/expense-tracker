@@ -1,6 +1,6 @@
 from fastapi import APIRouter, File, UploadFile
 
-from app.classes.receipt_scanning_models import APIResponse
+from app.models.receipt_scanning_models import APIResponse
 from app.services.receipt_scanning.detect_receipt import detect_receipt
 from app.services.receipt_scanning.preprocess_receipt import preprocess_receipt
 from app.services.receipt_scanning.ocr import extract_text, TESSERACT
