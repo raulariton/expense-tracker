@@ -3,17 +3,14 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
 from fastapi.security import OAuth2PasswordRequestForm
-from app.services.auth.jwt import Token, create_access_token, verify_token
+from app.services.auth.jwt import Token, create_access_token, verify_token, oauth2_bearer
 from app.services.auth.login import authenticate_user
 from app.services.auth.register import UserCreationRequest, create_user, get_user_by_email
 from app.services.auth.utils import db_dependency
 from app.models import dbmodels as models
 
 
-router = APIRouter(
-    prefix="/auth",
-    tags=["auth"],
-)
+router = APIRouter()
 
 # This endpoint is used to log in
 @router.post("/token", response_model=Token)
@@ -67,8 +64,10 @@ def register_user(user_creation_request: UserCreationRequest, db: db_dependency)
     return {"access_token": access_token, "token_type": "bearer"}
 
 # NOTE: This endpoint will be used internally
+# to get a user object for ORM.
+# The token passed is the token received from the request
 @router.get("/users/me")
-async def get_current_user(token: str):
+async def get_current_user(token: str = Depends(oauth2_bearer)):
     """
     Verifies the user's token and returns the user.
     """

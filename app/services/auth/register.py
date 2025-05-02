@@ -6,7 +6,7 @@ class UserCreationRequest(BaseModel):
     email: str
     password: str
 
-async def create_user(
+def create_user(
         db: db_dependency,
         user_creation_request: UserCreationRequest):
     """

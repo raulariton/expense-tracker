@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Enum, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, Enum, DateTime, Float
 from app.db.datatabase import Base
 import enum
 import uuid
@@ -24,7 +24,7 @@ class Expense(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), index=True)
 
-    amount = Column(Integer)
+    amount = Column(Float)
     vendor = Column(String)
     category = Column(Enum(ExpenseCategory), nullable=False, default=ExpenseCategory.OTHER)
     date_time = Column(String, name="dateTime")
