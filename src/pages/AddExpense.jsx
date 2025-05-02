@@ -85,7 +85,7 @@ const AddExpense = () => {
       amount: amount,
       category: category,
       vendor: vendor,
-      datetime: `${date}T${time.slice(0, 10)}`,
+      datetime: date && time ? `${date}T${time.slice(0, 10)}` : "",
     });
   };
 
