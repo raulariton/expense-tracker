@@ -1,20 +1,27 @@
 export default {
+    expense_categories: {
+      food_and_dining: "Mâncare & Restaurant",
+      shopping: "Shopping",
+      transport: "Transport",
+      bills: "Facturi",
+      other: "Altele"
+    },
     navbar: {
-      dashboard: "Dashboard ro ",
-      addExpense: "Add Expense",
-      statistics: "Statistics",
-      profile: "Profile",
-      settings: "Settings",
-      logout: "Logout",
-      login: "Login",
-      language: "Language"
+      dashboard: "Dashboard",
+      addExpense: "Adaugă Cheltuială",
+      statistics: "Statistici",
+      profile: "Profil",
+      settings: "Setări",
+      logout: "Deconectare",
+      login: "Conectare",
+      language: "Limbă"
     },
     dashboard: {
       totalSpent: "Total Spent",
       spentToday: "Spent Today",
       thisWeek: "This Week",
       addExpense: "Add Expense",
-      recentActivity: "Recent Activity",
+      recentActivity: "Cheltuieli recente",
       subtitleMonth: "This month",
       subtitleToday: "Today",
       subtitleWeek: "Last 7 Days"

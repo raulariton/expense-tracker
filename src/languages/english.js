@@ -1,4 +1,11 @@
 export default {
+  expense_categories: {
+    food_and_dining: "Food & Dining",
+    shopping: "Shopping",
+    transport: "Transport",
+    bills: "Bills",
+    other: "Other"
+  },
   navbar: {
     dashboard: "Dashboard",
     addExpense: "Add Expense",
