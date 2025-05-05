@@ -31,7 +31,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { lang } = useLanguage();
 
-  const isAuthenticated = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
   const [summary, setSummary] = useState(null);
   const [categoryTotals, setCategoryTotals] = useState([
     { category: "Food & Dining", total: 0 },

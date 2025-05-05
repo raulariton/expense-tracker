@@ -22,7 +22,7 @@ import { AuthContext } from "../App.jsx";
 
 const Statistics = () => {
   const { lang } = useLanguage();
-  const isAuthenticated = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
   const colorOfCategory = {
     "Food & Dining": "#264653",
     "Shopping": "#2A9D8F",
