@@ -27,5 +27,5 @@ class Expense(Base):
     amount = Column(Float)
     vendor = Column(String)
     category = Column(Enum(ExpenseCategory), nullable=False, default=ExpenseCategory.OTHER)
-    date_time = Column(String, name="dateTime")
+    date_time = Column(DateTime, name="dateTime")
 

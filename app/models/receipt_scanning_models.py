@@ -10,6 +10,12 @@ class Expense(BaseModel):
     :param date: Date of the expense, optional field.
     """
 
+    # TODO: Refactor to:
+    #  rename total to amount
+    #  rename date, time combined to date_time
+    #  set category to ExpenseCategory enum type
+
+
     vendor: Optional[str]
     # NOTE: if category is not found, implementation sets it as "Other"
     category: str

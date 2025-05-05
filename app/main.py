@@ -2,7 +2,7 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.exceptions import set_exception_handlers
-from app.api import receipt_scanning_router, auth_router
+from app.api import receipt_scanning_router, auth_router, expenses_router
 
 import numpy as np
 import cv2
@@ -38,6 +38,7 @@ set_exception_handlers(app)
 
 app.include_router(receipt_scanning_router, prefix="/receipt")
 app.include_router(auth_router, prefix="/auth")
+app.include_router(expenses_router, prefix="/expenses")
 
 
 # test endpoint
