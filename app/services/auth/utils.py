@@ -1,4 +1,4 @@
-from app.db.datatabase import Base, SessionLocal, engine
+from app.db.database import Base, SessionLocal, engine
 import app.models.dbmodels as models
 
 from datetime import timedelta, datetime, timezone
@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from starlette import status
-from app.db.datatabase import SessionLocal
+from app.db.database import SessionLocal
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
