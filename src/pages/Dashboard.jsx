@@ -97,7 +97,7 @@ const Dashboard = () => {
           },
         );
 
-        // setCategoryTotals(response.data.category_summary);
+        // only update the category totals if the response is not empty
         setCategoryTotals((prevTotals) =>
           prevTotals.map((category) => {
             const updatedCategory = response.data.category_summary.find(

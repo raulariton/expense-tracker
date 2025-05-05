@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "predev": "rimraf node_modules/.vite",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
@@ -25,6 +26,7 @@
     "react-router-dom": "^7.5.0",
     "react-spinners": "^0.17.0",
     "recharts": "^2.15.3",
+    "rimraf": "^6.0.1",
     "tailwind-variants": "^1.0.0",
     "tailwindcss": "^4.1.3"
   },
