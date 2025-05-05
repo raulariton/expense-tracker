@@ -21,7 +21,7 @@ export default {
     spentToday: "Spent Today",
     thisWeek: "This Week",
     addExpense: "Add Expense",
-    recentActivity: "Recent Activity",
+    recentExpenses: "Recent Activity",
     subtitleMonth: "This month",
     subtitleToday: "Today",
     subtitleWeek: "Last 7 Days"

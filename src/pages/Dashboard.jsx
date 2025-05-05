@@ -17,8 +17,9 @@ import {
 
 import "../styles/dashboard.css";
 import axios from "axios";
+import { useLanguage } from "../context/LanguageContext.jsx";
 
-const category_and_icon = {
+const icon_of_category = {
   "Food & Dining": <FaUtensils />,
   "Shopping": <FaShoppingBag />,
   "Transport": <FaCar />,
@@ -28,6 +29,7 @@ const category_and_icon = {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { lang } = useLanguage();
 
   const isAuthenticated = useContext(AuthContext);
   const [summary, setSummary] = useState(null);
@@ -38,6 +40,7 @@ const Dashboard = () => {
     { category: "Bills", total: 0 },
     { category: "Other", total: 0 },
   ]);
+  const [userRecentExpenses, setUserRecentExpenses] = useState(null);
 
   if (!isAuthenticated) {
     // TODO: Redirect to login page, and then back to dashboard
@@ -112,43 +115,48 @@ const Dashboard = () => {
     getCategoryTotals();
   }, []);
 
-  // const summary = {
-  //   total: userExpenses.reduce((acc, e) => acc + e.amount, 0).toFixed(2),
-  //   today: userExpenses
-  //     .filter((e) => e.date.startsWith(todayDate))
-  //     .reduce((acc, e) => acc + e.amount, 0)
-  //     .toFixed(2),
-  //   week: userExpenses
-  //     .filter((e) => {
-  //       const date = new Date(e.date);
-  //       const today = new Date();
-  //       const oneWeekAgo = new Date();
-  //       oneWeekAgo.setDate(today.getDate() - 7);
-  //       return date >= oneWeekAgo && date <= today;
-  //     })
-  //     .reduce((acc, e) => acc + e.amount, 0)
-  //     .toFixed(2),
-  // };
+  // get recent expenses (by default 5 most recent)
+  useEffect(() => {
+    const getRecentExpenses = async () => {
+      const limit = 5;
+      const token = localStorage.getItem("access_token");
 
-  /*
-  const recent = userExpenses
-    .slice(-5)
-    .reverse()
-    .map((e) => ({
-      name: e.description,
-      amount: e.amount,
-      time: new Date(e.date).toLocaleString(),
-      icon: db.categories.find((c) => c.id === e.category_id)?.icon || "tag",
-    }));
+      // submit request with token
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/expenses/?limit=${limit}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
 
-  const categoryTotals = db.categories.map((cat) => {
-    const total = userExpenses
-      .filter((e) => e.category_id === cat.id)
-      .reduce((acc, e) => acc + e.amount, 0)
-      .toFixed(2);
-    return { title: cat.name, amount: total, icon: cat.icon };
-  });
-   */
+        setUserRecentExpenses(response.data.expenses);
+      } catch (error) {
+        // Display error message on frontend
+        alert(error);
+      }
+    }
+
+    getRecentExpenses();
+  }, []);
+
+
+  const displayCategoryNameUsingLocale = (category) => {
+    switch (category) {
+      case "Food & Dining":
+        return lang.expense_categories.food_and_dining;
+      case "Shopping":
+        return lang.expense_categories.shopping;
+      case "Transport":
+        return lang.expense_categories.transport;
+      case "Bills":
+        return lang.expense_categories.bills;
+      default:
+        return lang.expense_categories.other;
+    }
+  }
 
   return (
     <MainLayout>
@@ -156,25 +164,26 @@ const Dashboard = () => {
         {/* Summary Cards */}
         <div className="summary-cards">
           <SummaryCard
-            title="Total Spent"
+            title={lang.dashboard.totalSpent}
             amount={`$${(summary?.total_month || 0).toFixed(2)}`}
-            subtitle="This month"
+            subtitle={lang.dashboard.subtitleMonth}
             icon={<FaCalendarAlt />}
           />
           <SummaryCard
-            title="Spent Today"
+            title={lang.dashboard.spentToday}
             amount={`$${(summary?.total_day || 0).toFixed(2)}`}
-            subtitle="Today"
+            subtitle={lang.dashboard.subtitleToday}
             icon={<FaCalendarAlt />}
           />
           <SummaryCard
-            title="This Week"
+            title={lang.dashboard.thisWeek}
             amount={`$${(summary?.total_week || 0).toFixed(2)}`}
-            subtitle="Last 7 Days"
+            subtitle={lang.dashboard.subtitleWeek}
             icon={<FaCalendarAlt />}
           />
         </div>
 
+        {/*TODO: "Add expense button"*/}
         {/*/!* Action Buttons *!/*/}
         {/*<div className="dashboard-actions">*/}
         {/*  <button className="btn-primary" onClick={goToAddExpense}>*/}
@@ -188,28 +197,28 @@ const Dashboard = () => {
           {categoryTotals && categoryTotals.map((categoryTotal, index) => (
             <CategoryCard
               key={index}
-              title={categoryTotal.category}
+              title={displayCategoryNameUsingLocale(categoryTotal.category)}
               amount={`$${(categoryTotal.total.toFixed(2))}`}
-              icon={category_and_icon[categoryTotal.category]}
+              icon={icon_of_category[categoryTotal.category]}
             />
           ))}
         </div>
 
-        {/* Recent Activity */}
-        {/*<div className="activity-card">*/}
-        {/*  <h3>Recent Activity</h3>*/}
-        {/*  <div className="activity-list">*/}
-        {/*    {recent.map((item, i) => (*/}
-        {/*      <ActivityItem*/}
-        {/*        key={i}*/}
-        {/*        icon={iconMap[item.icon]}*/}
-        {/*        name={item.name}*/}
-        {/*        time={item.time}*/}
-        {/*        amount={`-$${item.amount}`}*/}
-        {/*      />*/}
-        {/*    ))}*/}
-        {/*  </div>*/}
-        {/*</div>*/}
+        {/* Recent Expenses */}
+        <div className="activity-card">
+          <h3>{lang.dashboard.recentExpenses}</h3>
+          <div className="activity-list">
+            {userRecentExpenses && userRecentExpenses.map((expense, index) => (
+              <ActivityItem
+                key={index}
+                icon={icon_of_category[expense.category]}
+                name={expense.vendor}
+                time={expense.datetime}
+                amount={`$${(expense.total).toFixed(2)}`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </MainLayout>
   );
