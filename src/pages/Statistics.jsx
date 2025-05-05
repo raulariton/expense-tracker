@@ -188,7 +188,7 @@ const Statistics = () => {
                       <stop offset="95%" stopColor="#2563eb" stopOpacity={0} />
                     </linearGradient>
                   </defs>
-                  <XAxis dataKey="date" />
+                  <XAxis dataKey="date_time" />
                   <YAxis />
                   <CartesianGrid strokeDasharray="3 3" />
                   <Tooltip />
