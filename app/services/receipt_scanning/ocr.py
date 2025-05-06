@@ -22,7 +22,7 @@ def tesseract_ocr(receipt):
     print(text)
 
     # DEBUG
-    draw_tesseract_bounding_boxes(receipt)
+    # draw_tesseract_bounding_boxes(receipt)
 
     return text
 
