@@ -2,16 +2,9 @@ import cv2
 import numpy as np
 from skimage.transform import radon
 from PIL import Image
-from numpy import asarray, mean, array
+from numpy import asarray, mean, array, argmax
 
-try:
-    from parabolic import parabolic
 
-    def argmax(x):
-        return parabolic(x, np.argmax(x))[0]
-
-except ImportError:
-    from numpy import argmax
 
 # CONSTANTS THAT AFFECT THE PREPROCESSING
 # TODO: these should be modified to work ideally universally
@@ -51,6 +44,26 @@ C = 11
 # Constant subtracted from the mean or weighted mean.
 # This value can be zero or positive.
 
+# Simple noise removal
+def noise_removal(image):
+    kernel = np.ones((1,1),np.uint8)
+    image = cv2.dilate(image,kernel, iterations=1)
+    kernel = np.ones((1,1),np.uint8)
+    image = cv2.erode(image,kernel, iterations=1 )
+    image = cv2.morphologyEx(image,cv2.MORPH_CLOSE, kernel)
+    image = cv2.medianBlur(image,3)
+    return image
+
+
+def thin_font(image):
+    """
+    Thins the text, makes it distinguishable
+    """
+    image = cv2.bitwise_not(image)
+    kernel = np.ones((2,2),np.uint8)
+    image = cv2.erode(image,kernel,iterations=1)
+    image = cv2.bitwise_not(image)
+    return image
 
 def preprocess_receipt(image):
     """
@@ -60,9 +73,34 @@ def preprocess_receipt(image):
     # convert to grayscale
     preprocessed_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
+    #denoising
+    preprocessed_image = noise_removal(preprocessed_image)
+   # cv2.imwrite("images/debug_images/denoised.png", preprocessed_image)
+
+    #thin font
+    preprocessed_image = thin_font(preprocessed_image)
+  #  cv2.imwrite("images/debug_images/thinned.png", preprocessed_image)
+
+
+
+    # apply adaptive thresholding (binarization)
+    preprocessed_image = cv2.adaptiveThreshold(
+        preprocessed_image,
+        230,
+        cv2.ADAPTIVE_THRESH_MEAN_C,
+        cv2.THRESH_BINARY,
+        blockSize,
+        C,
+    )
+
+   # cv2.imwrite("images/debug_images/thresholded.png", preprocessed_image)
+
     # apply CLAHE histogram equalization
-    clahe = cv2.createCLAHE(clipLimit, tileGridSize)
-    preprocessed_image = clahe.apply(preprocessed_image)
+   # clahe = cv2.createCLAHE(clipLimit, tileGridSize)
+   # preprocessed_image = clahe.apply(preprocessed_image)
+
+   # cv2.imwrite("images/debug_images/clahed.png", preprocessed_image)
+
 
     # denoise the image
     preprocessed_image = cv2.fastNlMeansDenoising(
@@ -73,26 +111,12 @@ def preprocess_receipt(image):
         searchWindowSize=searchWindowSize,
     )
 
-    # apply adaptive thresholding (binarization)
-    preprocessed_image = cv2.adaptiveThreshold(
-        preprocessed_image,
-        255,
-        cv2.ADAPTIVE_THRESH_MEAN_C,
-        cv2.THRESH_BINARY,
-        blockSize,
-        C,
-    )
 
     # deskew image
-    preprocessed_image = deskew(preprocessed_image)
-
-    # remove artifacts
-    # preprocessed_image = remove_artifacts(preprocessed_image)
+    # preprocessed_image = deskew(preprocessed_image)
 
     # DEBUG: show image
-    # cv2.imshow("Preprocessed Image", preprocessed_image)
-    # cv2.waitKey(0)
-
+    # cv2.imwrite("images/debug_images/preprocessed.png", preprocessed_image)
     return preprocessed_image
 
 # NOTE: In progress
@@ -243,10 +267,10 @@ def deskew(numpy_image):
     # if the skew angle is small, return the image as is
     # this is to avoid rotating the image if it is already straight
     if abs(skew_angle) < 5:
-        return np.array(numpy_image)
+        return np.array(image)
     else:
-        numpy_image = numpy_image.rotate(skew_angle, expand=True, fillcolor="white")
-        return np.array(numpy_image)
+        image = image.rotate(skew_angle, expand=True, fillcolor="white")
+        return np.array(image)
 
 # NOTE: In progress
 def remove_artifacts(image):
