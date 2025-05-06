@@ -6,27 +6,13 @@ import ActivityItem from "../components/ActivityItem";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App.jsx";
 import {
-  FaCamera,
   FaCalendarAlt,
-  FaUtensils,
-  FaShoppingBag,
-  FaCar,
-  FaFileInvoice,
-  FaTag,
 } from "react-icons/fa";
 
 import "../styles/dashboard.css";
 import axios from "axios";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import toast from "react-hot-toast";
-
-const icon_of_category = {
-  "Food & Dining": <FaUtensils />,
-  "Shopping": <FaShoppingBag />,
-  "Transport": <FaCar />,
-  "Bills": <FaFileInvoice />,
-  "Other": <FaTag />,
-};
 
 const Dashboard = () => {
   const { lang } = useLanguage();
@@ -82,7 +68,7 @@ const Dashboard = () => {
       // submit request with token
       try {
         const response = await axios.get(
-          `http://localhost:8000/expenses`,
+          `http://localhost:8000/expenses/`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -128,15 +114,15 @@ const Dashboard = () => {
         </div>
 
         {/* Recent Expenses */}
-        <div className="activity-card">
+        <div className="expenses-card">
           <h3>{lang.dashboard.recentExpenses}</h3>
-          <div className="activity-list">
+          <div className="expense-list">
             {userRecentExpenses && userRecentExpenses.map((expense, index) => (
               <ActivityItem
                 key={index}
-                icon={icon_of_category[expense.category]}
+                category={expense.category}
                 name={expense.vendor}
-                time={expense.datetime}
+                dateTime={expense.datetime}
                 amount={`$${(expense.total).toFixed(2)}`}
               />
             ))}

@@ -18,6 +18,8 @@ import {
 import { useLanguage } from "../context/LanguageContext";
 import { AuthContext } from "../App.jsx";
 import toast from "react-hot-toast";
+import ActivityItem from "../components/ActivityItem.jsx";
+import PaginationButtons from "../components/PaginationButtons.jsx";
 
 // TODO: Create a component for both charts; cleaner look
 
@@ -42,6 +44,11 @@ const Statistics = () => {
     { category: "Other", total: 0 }
   ]);
 
+  // for pagination
+  const [pageNumber, setPageNumber] = useState(1);
+  const expensesPerPage = 5; // number of expenses to show per page
+  const [paginatedExpenses, setPaginatedExpenses] = useState([]);
+  const [totalExpenses, setTotalExpenses] = useState(0);
 
   useEffect(() => {
     // fetch data
@@ -62,6 +69,7 @@ const Statistics = () => {
         );
 
         setExpensesList(response.data.expenses);
+        setTotalExpenses(response.data.total);
 
       } catch (error) {
         toast.error("Error occurred: " + error.message);
@@ -106,7 +114,6 @@ const Statistics = () => {
     }, []);
 
   useEffect(() => {
-
     const groupExpensesByDate = () => {
       let totalPerDay = {};
 
@@ -137,6 +144,36 @@ const Statistics = () => {
       groupExpensesByDate();
     }
   }, [expensesList]);
+
+  useEffect(() => {
+    // expense pagination
+    const getExpensesWithPagination = async () => {
+      const token = localStorage.getItem("access_token");
+
+      // submit GET request with token
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/expenses/",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+            params: {
+              limit: expensesPerPage,
+              offset: (pageNumber - 1) * expensesPerPage
+            }
+          }
+        );
+
+        setPaginatedExpenses(response.data.expenses);
+
+      } catch (error) {
+        toast.error("Error occurred: " + error.message);
+      }
+    }
+
+    getExpensesWithPagination();
+  }, [pageNumber, expensesPerPage]);
 
   if (!isAuthenticated) {
     return (
@@ -223,27 +260,29 @@ const Statistics = () => {
           </div>
 
           {/* expense list */}
-          {/* simply a list of all the expenses for now */}
-          {/* TODO: Pagination, filtering by date */}
-          {/*<div className="recent-expenses">*/}
-          {/*  <h2>{lang.statistics.title}</h2>*/}
-          {/*  {sortedDates.map(date => (*/}
-          {/*    <div className="expense-group" key={date}>*/}
-          {/*      <h4>{date}</h4>*/}
-          {/*      <ul>*/}
-          {/*        {groupedExpenses[date].map(entry => {*/}
-          {/*          const category = db.categories.find(c => c.id === entry.category_id)?.name || "Other";*/}
-          {/*          return (*/}
-          {/*            <li key={entry.id}>*/}
-          {/*              <span className="category">{category}</span> — {entry.description}*/}
-          {/*              <span className="amount">- ${entry.amount.toFixed(2)}</span>*/}
-          {/*            </li>*/}
-          {/*          );*/}
-          {/*        })}*/}
-          {/*      </ul>*/}
-          {/*    </div>*/}
-          {/*  ))}*/}
-          {/*</div>*/}
+          {/* TODO: Grouping by date */}
+          <div className="expense-card">
+            <h3>{lang.statistics.title}</h3>
+            <div className="expense-list"
+             style={{ height: `${expensesPerPage * 4.1}rem` }}>
+            {paginatedExpenses && paginatedExpenses.map((expense, index) => (
+              <ActivityItem
+                key={index}
+                category={expense.category}
+                name={expense.vendor}
+                dateTime={expense.datetime}
+                amount={`$${(expense.total).toFixed(2)}`}
+              />
+            ))}
+            </div>
+
+            <PaginationButtons
+              pageNumber={pageNumber}
+              setPageNumber={setPageNumber}
+              totalItems={totalExpenses}
+              displayPerPage={expensesPerPage}
+            />
+          </div>
         </div>
       </MainLayout>
     );
