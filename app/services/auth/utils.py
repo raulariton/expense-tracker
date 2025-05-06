@@ -1,0 +1,38 @@
+from app.db.database import Base, SessionLocal, engine
+import app.models.dbmodels as models
+
+from datetime import timedelta, datetime, timezone
+from typing import Annotated
+from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from starlette import status
+from app.db.database import SessionLocal
+from passlib.context import CryptContext
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
+
+from app.services.auth.jwt import verify_token
+
+
+def get_db():
+    # create db session
+    db = SessionLocal()
+
+    try:
+        # yield, not return
+        # to ensure session is closed finally
+        yield db
+    finally:
+        db.close()
+
+bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+# used for dependency injection:
+# the router does not create the session, but receives it
+# from the dependency
+# this is useful for testing, where mock sessions can be used
+db_dependency = Annotated[Session, Depends(get_db)]
+user_dependency = Annotated[models.User, Depends(verify_token)]
+# the function passed in Depends() returns a dependency instance
