@@ -1,4 +1,3 @@
-from datetime import timedelta
 from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
@@ -7,7 +6,6 @@ from app.services.auth.jwt import Token, create_access_token, verify_token, oaut
 from app.services.auth.login import authenticate_user
 from app.services.auth.register import UserCreationRequest, create_user, get_user_by_email
 from app.services.auth.utils import db_dependency
-from app.models import dbmodels as models
 
 
 router = APIRouter()
@@ -33,9 +31,8 @@ async def login_for_access_token(
 
     # user exists (match found)
     # create access token
-    # JWT will be valid for 30 minutes
     # NOTE: JWT could be extended by using the refresh token (API calls)
-    access_token = create_access_token(user.email, user.id, timedelta(minutes=30))
+    access_token = create_access_token(user.email, user.id)
 
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -63,6 +60,7 @@ def register_user(user_creation_request: UserCreationRequest, db: db_dependency)
 
     return {"access_token": access_token, "token_type": "bearer"}
 
+
 # NOTE: This endpoint will be used internally
 # to get a user object for ORM.
 # The token passed is the token received from the request
@@ -79,24 +77,3 @@ async def get_current_user(token: str = Depends(oauth2_bearer)):
             headers={"WWW-Authenticate": "Bearer"},
         )
     return user
-
-
-#
-# def main():
-#
-#     # create a new session
-#     db = next(get_db())
-#
-#     # create test user
-#     test_user = models.User(email="mary.poppins@gmail.com", hashed_password="not_hashed_password")
-#
-#     # add test user to session
-#     db.add(test_user)
-#     # commit the session
-#     db.commit()
-#     # refresh the session
-#     db.refresh(test_user)
-#
-#
-# if __name__ == "__main__":
-#     main()

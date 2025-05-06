@@ -1,20 +1,9 @@
-from datetime import timedelta
-from json import dumps
-from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
-from fastapi.security import OAuth2PasswordRequestForm
 from starlette.responses import JSONResponse
 
 from app.api.routes.auth import get_current_user
 from app.models.expense_data_models import TotalSummary
-from app.services.auth.jwt import Token, create_access_token, verify_token
-from app.services.auth.login import authenticate_user
-from app.services.auth.register import (
-    UserCreationRequest,
-    create_user,
-    get_user_by_email,
-)
 from app.services.auth.utils import db_dependency
 from app.models import expense_data_models as models
 from app.models.receipt_scanning_models import Expense
@@ -118,26 +107,48 @@ async def get_category_summary(
 @router.get("/", response_model=list[Expense])
 async def get_expenses(
     db: db_dependency,
-    current_user: dict = Depends(get_current_user),
-    limit: int = 5,
+    limit: int = None,
+    offset: int = None,
+    start_date: datetime.date = None,
+    end_date: datetime.date = None,
+    current_user: dict = Depends(get_current_user)
 ):
     """
     Returns a list of all expenses for the current user.
+    This endpoint can be used to paginate the results, if
+    the limit and offset parameters are set.
+    For example, if each page contains 10 (limit = 10) expenses, the second page will
+    have a limit of 10, and an offset of 10, meaning the first 10 expenses will be skipped and only 10 will be returned.
     :param limit: The maximum number of expenses to return.
+    :param offset: The number of expenses to skip in the result set, starting from the beginning.
+    :param start_date: The start date of the range to filter expenses by (inclusive).
+    :param end_date: The end date of the range to filter expenses by (inclusive).
     """
 
+    # TODO: Clean code: Have the get_current_user function return a User object
+    #  and not just a dictionary
     user_id = current_user.get("user_id")
 
-    # get all expenses for the current user
-    expenses = (
-        db.query(ExpenseTable)
-        .filter(ExpenseTable.user_id == user_id)
-        .limit(limit)
-        .all()
-    )
+
+    # base query
+    # sort by date descending (newest first)
+    query = (db.query(ExpenseTable)
+             .filter(ExpenseTable.user_id == user_id)
+             .order_by(ExpenseTable.date_time.desc()))
+
+    # TODO: add date filtering (before limit and offset)
+
+    # check if limit is given
+    if limit:
+        query = query.limit(limit)
+        # check if offset is given
+        if offset:
+            query = query.offset(offset)
 
     # convert to Expense model
     # expenses = [Expense(**expense.__dict__) for expense in expenses]
+
+    expenses = query.all()
 
     response = JSONResponse(
         content={

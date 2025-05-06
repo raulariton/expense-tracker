@@ -13,7 +13,7 @@ import jwt
 #  and store it in a secure place
 SECRET_KEY = 'expensetrackeristhebest69420'
 ALGORITHM = 'HS256'
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 999 # for testing purposes
 
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl="auth/token")
 
