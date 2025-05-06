@@ -17,6 +17,7 @@ import {
 } from "recharts";
 import { useLanguage } from "../context/LanguageContext";
 import { AuthContext } from "../App.jsx";
+import toast from "react-hot-toast";
 
 // TODO: Create a component for both charts; cleaner look
 
@@ -63,8 +64,7 @@ const Statistics = () => {
         setExpensesList(response.data.expenses);
 
       } catch (error) {
-        // Display error message on frontend
-        alert(error);
+        toast.error("Error occurred: " + error.message);
       }
     };
 
@@ -92,8 +92,7 @@ const Statistics = () => {
         );
 
       } catch (error) {
-        // Display error message on frontend
-        alert(error);
+        toast.error("Error occurred: " + error.message);
       }
     };
 
@@ -149,6 +148,26 @@ const Statistics = () => {
     );
   }
 
+  const displayCategoryNameUsingLocale = (category) => {
+    switch (category) {
+      case "Food & Dining":
+        return lang.expense_categories.food_and_dining;
+      case "Shopping":
+        return lang.expense_categories.shopping;
+      case "Transport":
+        return lang.expense_categories.transport;
+      case "Bills":
+        return lang.expense_categories.bills;
+      default:
+        return lang.expense_categories.other;
+    }
+  }
+
+  const localizedCategoryTotals = categoryTotals.map(category => ({
+    ...category,
+    category: displayCategoryNameUsingLocale(category.category)
+  }))
+
     return (
       <MainLayout>
         <div className="statistics-page">
@@ -159,13 +178,12 @@ const Statistics = () => {
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                   <Pie
-                    data={categoryTotals}
+                    data={localizedCategoryTotals}
                     dataKey="total"
                     nameKey="category"
                     cx="50%"
                     cy="50%"
                     outerRadius={80}
-                    label
                   >
                     {categoryTotals.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={colorOfCategory[entry.category]} />

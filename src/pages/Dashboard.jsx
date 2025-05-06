@@ -18,6 +18,7 @@ import {
 import "../styles/dashboard.css";
 import axios from "axios";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import toast from "react-hot-toast";
 
 const icon_of_category = {
   "Food & Dining": <FaUtensils />,
@@ -28,18 +29,10 @@ const icon_of_category = {
 };
 
 const Dashboard = () => {
-  const navigate = useNavigate();
   const { lang } = useLanguage();
 
   const { isAuthenticated } = useContext(AuthContext);
   const [summary, setSummary] = useState(null);
-  const [categoryTotals, setCategoryTotals] = useState([
-    { category: "Food & Dining", total: 0 },
-    { category: "Shopping", total: 0 },
-    { category: "Transport", total: 0 },
-    { category: "Bills", total: 0 },
-    { category: "Other", total: 0 },
-  ]);
   const [userRecentExpenses, setUserRecentExpenses] = useState(null);
 
   if (!isAuthenticated) {
@@ -72,47 +65,12 @@ const Dashboard = () => {
 
         setSummary(response.data);
       } catch (error) {
-        console.log(error);
-        // Display error message on frontend
-        alert(error);
+        toast.error("Error occurred: " + error.message);
+
       }
     }
 
     getSummary();
-  }, []);
-
-  // get total expenses by category
-  useEffect( () => {
-    const getCategoryTotals = async () => {
-      const token = localStorage.getItem("access_token");
-
-      // submit request with token
-      try {
-        const response = await axios.get(
-          "http://localhost:8000/expenses/category-summary",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-
-        // only update the category totals if the response is not empty
-        setCategoryTotals((prevTotals) =>
-          prevTotals.map((category) => {
-            const updatedCategory = response.data.category_summary.find(
-              (item) => item.category === category.category
-            );
-            return updatedCategory ? updatedCategory : category;
-          })
-        );
-      } catch (error) {
-        // Display error message on frontend
-        alert(error);
-      }
-    }
-
-    getCategoryTotals();
   }, []);
 
   // get recent expenses (by default 5 most recent)
@@ -124,39 +82,25 @@ const Dashboard = () => {
       // submit request with token
       try {
         const response = await axios.get(
-          `http://localhost:8000/expenses/?limit=${limit}`,
+          `http://localhost:8000/expenses`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
+            params: {
+              limit: limit
+            }
           },
         );
 
         setUserRecentExpenses(response.data.expenses);
       } catch (error) {
-        // Display error message on frontend
-        alert(error);
+        toast.error("Error occurred: " + error.message);
       }
     }
 
     getRecentExpenses();
   }, []);
-
-
-  const displayCategoryNameUsingLocale = (category) => {
-    switch (category) {
-      case "Food & Dining":
-        return lang.expense_categories.food_and_dining;
-      case "Shopping":
-        return lang.expense_categories.shopping;
-      case "Transport":
-        return lang.expense_categories.transport;
-      case "Bills":
-        return lang.expense_categories.bills;
-      default:
-        return lang.expense_categories.other;
-    }
-  }
 
   return (
     <MainLayout>
@@ -181,27 +125,6 @@ const Dashboard = () => {
             subtitle={lang.dashboard.subtitleWeek}
             icon={<FaCalendarAlt />}
           />
-        </div>
-
-        {/*TODO: "Add expense button"*/}
-        {/*/!* Action Buttons *!/*/}
-        {/*<div className="dashboard-actions">*/}
-        {/*  <button className="btn-primary" onClick={goToAddExpense}>*/}
-        {/*    <FaCamera className="btn-icon" />*/}
-        {/*    Add Expense*/}
-        {/*  </button>*/}
-        {/*</div>*/}
-
-        {/* Categories */}
-        <div className="category-cards">
-          {categoryTotals && categoryTotals.map((categoryTotal, index) => (
-            <CategoryCard
-              key={index}
-              title={displayCategoryNameUsingLocale(categoryTotal.category)}
-              amount={`$${(categoryTotal.total.toFixed(2))}`}
-              icon={icon_of_category[categoryTotal.category]}
-            />
-          ))}
         </div>
 
         {/* Recent Expenses */}

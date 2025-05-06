@@ -4,6 +4,7 @@ import axios from "axios";
 import "../styles/AddExpense.css";
 import { useLanguage } from "../context/LanguageContext";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import toast from "react-hot-toast";
 
 const AddExpense = () => {
   const { lang } = useLanguage();
@@ -54,8 +55,7 @@ const AddExpense = () => {
       );
 
       if (response.status === 200) {
-        // TODO: Display success message in frontend
-        alert("Expense added successfully!");
+        toast.success("Expense added successfully!");
 
         // reset expense form data
         setReceiptData({
@@ -66,9 +66,7 @@ const AddExpense = () => {
         });
       }
     } catch (error) {
-      // TODO: Display error in frontend
-      alert("Error submitting expense: " + error.message);
-      console.log(error);
+      toast.error("Error occured: " + error.message);
     }
   };
 
@@ -106,14 +104,12 @@ const AddExpense = () => {
       );
 
       if (response.data.status_code !== 200) {
-        // TODO: Display error in frontend
-        alert("Error: " + response.data.message);
+        toast.error("Error occured: " + error.message);
       } else {
         parseResponse(response.data);
       }
     } catch (error) {
-      // TODO: Display error in frontend
-      alert("Error uploading file: " + error.message);
+      toast.error("Error while uploading file: " + error.message);
     } finally {
       setIsLoading(false);
     }
@@ -147,6 +143,7 @@ const AddExpense = () => {
               <input
                 type="number"
                 placeholder="0.00"
+                step="0.10"
                 value={receiptData.amount}
                 onChange={(e) =>
                   setReceiptData({ ...receiptData, amount: e.target.value })
@@ -163,11 +160,11 @@ const AddExpense = () => {
                   setReceiptData({ ...receiptData, category: e.target.value })
                 }
               >
-                <option>Food & Dining</option>
-                <option>Transport</option>
-                <option>Shopping</option>
-                <option>Bills</option>
-                <option>Other</option>
+                <option>{lang.expense_categories.food_and_dining}</option>
+                <option>{lang.expense_categories.transport}</option>
+                <option>{lang.expense_categories.shopping}</option>
+                <option>{lang.expense_categories.bills}</option>
+                <option>{lang.expense_categories.other}</option>
               </select>
             </label>
 
@@ -175,7 +172,7 @@ const AddExpense = () => {
               {lang.addExpense.vendor}
               <input
                 type="text"
-                placeholder="Enter vendor name"
+                placeholder="ex. Profi"
                 value={receiptData.vendor}
                 onChange={(e) =>
                   setReceiptData({ ...receiptData, vendor: e.target.value })
@@ -236,18 +233,18 @@ const AddExpense = () => {
               )}
             </div>
 
-            {!previewURL && (
-              <div className="or-text">
-                <span>{lang.addExpense.or}</span>
-              </div>
-            )}
-
-            {!previewURL && (
-              <div className="qrcode-placeholder">
-                <p>{lang.addExpense.qrcodePlaceholder}</p>
-                <div className="qrcode-box">[ qrcode placeholder ]</div>
-              </div>
-            )}
+            {/*{!previewURL && (*/}
+            {/*  <div className="or-text">*/}
+            {/*    <span>{lang.addExpense.or}</span>*/}
+            {/*  </div>*/}
+            {/*)}*/}
+            {/* TODO: uncomment and use for QR code scan feature (when implemented) */}
+            {/*{!previewURL && (*/}
+            {/*  <div className="qrcode-placeholder">*/}
+            {/*    <p>{lang.addExpense.qrcodePlaceholder}</p>*/}
+            {/*    <div className="qrcode-box">[ qrcode placeholder ]</div>*/}
+            {/*  </div>*/}
+            {/*)}*/}
 
             {ocrSubmitted && previewURL && (
               <div className="ocr-results-container">
@@ -290,11 +287,11 @@ const AddExpense = () => {
                           })
                         }
                       >
-                        <option>Other</option>
-                        <option>Food & Dining</option>
-                        <option>Transport</option>
-                        <option>Shopping</option>
-                        <option>Bills</option>
+                        <option>{lang.expense_categories.food_and_dining}</option>
+                        <option>{lang.expense_categories.transport}</option>
+                        <option>{lang.expense_categories.shopping}</option>
+                        <option>{lang.expense_categories.bills}</option>
+                        <option>{lang.expense_categories.other}</option>
                       </select>
                     </label>
 

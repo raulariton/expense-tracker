@@ -17,17 +17,17 @@ export default {
     language: "Language"
   },
   dashboard: {
-    totalSpent: "Total Spent",
+    totalSpent: "Spent This Month",
     spentToday: "Spent Today",
-    thisWeek: "This Week",
+    thisWeek: "Spent This Week",
     addExpense: "Add Expense",
-    recentExpenses: "Recent Activity",
-    subtitleMonth: "This month",
-    subtitleToday: "Today",
+    recentExpenses: "Recents",
+    subtitleMonth: "Last 30 Days",
+    subtitleToday: "Last 24 Hours",
     subtitleWeek: "Last 7 Days"
   },
   statistics: {
-    title: "Recent Expenses",
+    title: "All your expenses",
     byCategory: "Spending by Category",
     overTime: "Spending Over Time",
     loginMessage: "Please log in to view your statistics"
@@ -35,18 +35,18 @@ export default {
   addExpense: {
     title: "Add Expense",
     manualTab: "Manual Entry",
-    scanTab: "Scan Receipt",
-    submit: "Submit Expense",
+    scanTab: "Scan Your Receipt",
+    submit: "Submit",
     uploadReceipt: "Upload an image of your receipt",
     submitToApi: "Submit & Scan",
     or: "or",
     qrcodePlaceholder: "Scan this QR code to take an image with your phone",
-    previewTitle: "Review Scanned Data",
+    previewTitle: "Review results",
     amount: "Amount",
     category: "Category",
     vendor: "Vendor",
     dateTime: "Date/Time",
-    add: "Add Expense"
+    add: "Add"
   },
   settings: {
     title: "Account Settings",
@@ -80,7 +80,7 @@ export default {
   home: {
     title: "Welcome to ExpenseTracker",
       description: "Track your spending easily, manage receipts, and gain insights into your expenses in a clean and modern interface.",
-      ShomeTitle: "bla bla bla bla ",
+      ShomeTitle: "...",
      
   }
   
