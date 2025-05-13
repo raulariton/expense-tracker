@@ -20,6 +20,7 @@ import { AuthContext } from "../App.jsx";
 import toast from "react-hot-toast";
 import ActivityItem from "../components/ActivityItem.jsx";
 import PaginationButtons from "../components/PaginationButtons.jsx";
+import DateFilterer from "../components/DateFilterer.jsx";
 
 // TODO: Create a component for both charts; cleaner look
 
@@ -69,7 +70,7 @@ const Statistics = () => {
         );
 
         setExpensesList(response.data.expenses);
-        setTotalExpenses(response.data.total);
+        setTotalExpenses(response.data.expenses.length);
 
       } catch (error) {
         toast.error("Error occurred: " + error.message);
@@ -263,6 +264,7 @@ const Statistics = () => {
           {/* TODO: Grouping by date */}
           <div className="expense-card">
             <h3>{lang.statistics.title}</h3>
+            <DateFilterer />
             <div className="expense-list"
              style={{ height: `${expensesPerPage * 4.1}rem` }}>
             {paginatedExpenses && paginatedExpenses.map((expense, index) => (
