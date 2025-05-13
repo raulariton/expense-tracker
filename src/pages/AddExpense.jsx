@@ -74,7 +74,7 @@ const AddExpense = () => {
     const amount = apiResponse.expense_data.total;
     const category = apiResponse.expense_data.category;
     const vendor = apiResponse.expense_data.vendor;
-    const date = apiResponse.expense_data.date_time;
+    const date = apiResponse.expense_data.date;
     const time = apiResponse.expense_data.time;
 
     setReceiptData({
