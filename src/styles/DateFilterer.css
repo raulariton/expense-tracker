@@ -1,0 +1,77 @@
+.date-filterer-container {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    padding: 1rem;
+    /*background-color: #c4c4c4;*/
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.09);
+    margin-bottom: 1.25rem;
+}
+
+.filter-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #1a202c;
+}
+
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    /*background-color: white;*/
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn.selected {
+    background-color: #094ea8;
+    font-weight: 500;
+}
+
+.date-range-picker {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.date-input-wrapper {
+    position: relative;
+}
+
+.date-input {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+}
+
+.date-range-separator {
+    color: #718096;
+}
+
+.apply-btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+@media (min-width: 640px) {
+    .date-filterer-container {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
