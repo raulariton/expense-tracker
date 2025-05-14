@@ -1,7 +1,6 @@
 .dashboard {
     background-color: #f8f9fb;
     padding: 32px;
-    font-family: 'Segoe UI', sans-serif;
     display: flex;
     flex-direction: column;
     gap: 32px;

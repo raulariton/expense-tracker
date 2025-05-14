@@ -4,12 +4,12 @@
     padding: 0;
     box-sizing: border-box;
   }
-  
+
   body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
     background-color: #f8f9fa;
     color: #333;
     overflow-x: hidden;

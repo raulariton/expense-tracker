@@ -3,7 +3,6 @@
 .home-page {
   background-color: #f8f9fb;
   padding: 40px 32px;
-  font-family: 'Segoe UI', sans-serif;
   display: flex;
   flex-direction: column;
   gap: 48px;
