@@ -4,6 +4,7 @@ import { FaUser, FaGlobe } from "react-icons/fa";
 import { useLanguage } from "../context/LanguageContext";
 import "../styles/Navbar.css";
 import { AuthContext } from "../App.jsx";
+import SVGIcon from "../assets/logo.svg?react";
 
 const Navbar = () => {
   const location = useLocation();
@@ -27,7 +28,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-left">
         <Link to="/" className="navbar-logo">
-          ExpenseTracker
+          <SVGIcon className="logo"/>
         </Link>
       </div>
 
