@@ -7,10 +7,13 @@ from dateutil import parser
 def llm_process_text(ocr_text: str) -> str:
     from openai import OpenAI
 
+    timeout = 10  # seconds
+
     # add your openrouter API key here
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
         api_key="",
+        timeout=timeout
     )
 
     prompt = """
@@ -46,7 +49,6 @@ def llm_process_text(ocr_text: str) -> str:
     TIME: Unknown
     """
 
-    timeout = 10  # seconds
 
     try:
         # NOTE: free model for now, to test the API
@@ -56,7 +58,6 @@ def llm_process_text(ocr_text: str) -> str:
                 {"role": "user",
                  "content": prompt.format(ocr_text=ocr_text)},
             ],
-            timeout=timeout,
         )
         return completion.choices[0].message.content
 
@@ -88,6 +89,13 @@ def get_expense_from_llm_response(llm_response: str) -> Expense:
     time_ = None
 
     # extract the values using regex
+    # NOTE: to understand each of these better, i recommend using
+    #  regex101.com
+    # generally,
+    # \s* means "zero or more whitespace"
+    # (.+) means "one or more of any character, except line terminators"
+    # thus the following patterns match (and extract) whatever text comes after
+    # each labels ("VENDOR", "CATEGORY", etc.) respectively
     vendor_pattern = r"VENDOR:\s*(.+)"
     category_pattern = r"CATEGORY:\s*(.+)"
     total_pattern = r"TOTAL:\s*(.+)"
