@@ -24,7 +24,8 @@ def llm_process_text(ocr_text: str) -> str:
     Receipt text:
     {ocr_text}
 
-    Extract the following information and respond ONLY using this exact format:
+    Extract the following information and respond ONLY using this exact format.
+    Do not include any explanations or additional text.
 
     VENDOR: [Identified business name with corrected OCR errors]
     CATEGORY: [Identified category, MUST be one of the following: "Food & Dining", "Transport", "Shopping", "Bills" or "Other"] 
@@ -35,10 +36,12 @@ def llm_process_text(ocr_text: str) -> str:
     Guidelines:
     - As context, use Romanian vendors, shops, companies (for example LIDL, Kaufland, Profi, Carrefour, etc.)
     - If unsure about a vendor, use as is (don't correct it).
+    - Ensure that the total amount is logical, and matches the sum of various other items identified in the receipt.
     - The identified category must be one of the following: "Food & Dining", "Transport", "Shopping", "Bills" or "Other"
     - If you can't determine any field with reasonable confidence, use "Unknown"
     - Do not include any explanations or additional text
     - Always use the exact label format shown above
+    - Do NOT include any additional text or explanations.
     """
 
     fallback_response = """
