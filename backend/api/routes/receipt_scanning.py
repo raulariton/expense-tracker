@@ -1,14 +1,14 @@
 from fastapi import APIRouter, File, UploadFile, Depends
 
-from app.models.dbmodels import ExpenseCategory
-from app.models.receipt_scanning_models import APIResponse, Expense
-from app.services.receipt_scanning.detect_receipt import detect_receipt
-from app.services.receipt_scanning.preprocess_receipt import preprocess_receipt
-from app.services.receipt_scanning.ocr import extract_text, TESSERACT
-from app.services.receipt_scanning.text_processing import process_text
-from app.services.auth.utils import db_dependency
-from app.models import dbmodels as models
-from app.api.routes.auth import get_current_user
+from models.dbmodels import ExpenseCategory
+from models.receipt_scanning_models import APIResponse, Expense
+from services.receipt_scanning.detect_receipt import detect_receipt
+from services.receipt_scanning.preprocess_receipt import preprocess_receipt
+from services.receipt_scanning.ocr import extract_text, TESSERACT
+from services.receipt_scanning.text_processing import process_text
+from services.auth.utils import db_dependency
+from models import dbmodels as models
+from api.routes.auth import get_current_user
 import datetime
 
 import numpy as np

@@ -9,7 +9,7 @@ from torchvision.models.segmentation import (
     deeplabv3_mobilenet_v3_large,
 )
 
-from app.models.exceptions import (
+from models.exceptions import (
     SegmentationModelError,
     EdgeDetectionError,
     PerspectiveTransformationError,
@@ -338,7 +338,7 @@ def find_dest(pts):
 def load_model(num_classes=2, device=torch.device("cpu")):
     model = deeplabv3_mobilenet_v3_large(num_classes=num_classes, aux_loss=True)
     checkpoint_path = os.path.join(
-        os.getcwd(), "app", "resources", "ml_models", "model_mbv3_iou_mix_2C049.pth"
+        os.getcwd(),"backend","resources", "ml_models", "model_mbv3_iou_mix_2C049.pth"
     )
 
     model.to(device)

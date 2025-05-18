@@ -1,5 +1,5 @@
 from starlette.responses import JSONResponse
-from app.models.exceptions import (
+from models.exceptions import (
     SegmentationModelError,
     EdgeDetectionError,
     PerspectiveTransformationError,

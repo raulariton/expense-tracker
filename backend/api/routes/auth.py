@@ -2,10 +2,10 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
 from fastapi.security import OAuth2PasswordRequestForm
-from app.services.auth.jwt import Token, create_access_token, verify_token, oauth2_bearer
-from app.services.auth.login import authenticate_user
-from app.services.auth.register import UserCreationRequest, create_user, get_user_by_email
-from app.services.auth.utils import db_dependency
+from services.auth.jwt import Token, create_access_token, verify_token, oauth2_bearer
+from services.auth.login import authenticate_user
+from services.auth.register import UserCreationRequest, create_user, get_user_by_email
+from services.auth.utils import db_dependency
 
 
 router = APIRouter()
