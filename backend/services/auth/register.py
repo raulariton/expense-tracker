@@ -1,6 +1,6 @@
-import app.models.dbmodels as models
+import models.dbmodels as models
 from pydantic import BaseModel
-from app.services.auth.utils import db_dependency, bcrypt_context
+from services.auth.utils import db_dependency, bcrypt_context
 
 class UserCreationRequest(BaseModel):
     email: str

@@ -1,5 +1,5 @@
-from app.services.auth.utils import db_dependency, bcrypt_context
-import app.models.dbmodels as models
+from services.auth.utils import db_dependency, bcrypt_context
+import models.dbmodels as models
 
 
 # util function

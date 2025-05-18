@@ -1,5 +1,5 @@
-from app.models.exceptions import OCRProcessingError
-from app.models.receipt_scanning_models import Expense
+from models.exceptions import OCRProcessingError
+from models.receipt_scanning_models import Expense
 import re
 from datetime import date, time
 from dateutil import parser

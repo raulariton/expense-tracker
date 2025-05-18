@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
-from app.models.dbmodels import ExpenseCategory
+from models.dbmodels import ExpenseCategory
 
 class TotalSummary(BaseModel):
     """

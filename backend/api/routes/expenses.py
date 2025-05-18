@@ -2,12 +2,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
 from starlette.responses import JSONResponse
 
-from app.api.routes.auth import get_current_user
-from app.models.expense_data_models import TotalSummary
-from app.services.auth.utils import db_dependency
-from app.models import expense_data_models as models
-from app.models.receipt_scanning_models import Expense
-from app.models.dbmodels import Expense as ExpenseTable
+from api.routes.auth import get_current_user
+from models.expense_data_models import TotalSummary
+from services.auth.utils import db_dependency
+from models import expense_data_models as models
+from models.receipt_scanning_models import Expense
+from models.dbmodels import Expense as ExpenseTable
 from sqlalchemy import func
 import datetime
 
