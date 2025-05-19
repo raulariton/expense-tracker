@@ -5,6 +5,7 @@ from services.auth.utils import db_dependency, bcrypt_context
 class UserCreationRequest(BaseModel):
     email: str
     password: str
+    isAdmin: bool = False
 
 def create_user(
         db: db_dependency,
@@ -16,7 +17,8 @@ def create_user(
 
     new_user_model = models.User(
         email=user_creation_request.email,
-        hashed_password=bcrypt_context.hash(user_creation_request.password)
+        hashed_password=bcrypt_context.hash(user_creation_request.password),
+        role_id=1 if user_creation_request.isAdmin else 2,
     )
 
     db.add(new_user_model)

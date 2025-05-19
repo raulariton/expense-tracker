@@ -20,7 +20,7 @@ class User(Base):
     hashed_password = Column(String)
     role_id = Column(Integer, ForeignKey("roles.id"), nullable=False, default=1)
 
-    role = relationship("Role",back_populates="users")
+    role = relationship("Role", back_populates="users")
 
 class Role(Base):
     __tablename__ = "roles"
