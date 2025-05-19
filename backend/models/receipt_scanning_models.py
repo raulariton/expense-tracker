@@ -32,3 +32,5 @@ class APIResponse(BaseModel):
 
     status_code: int
     expense_data: Expense
+
+

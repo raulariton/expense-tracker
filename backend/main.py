@@ -8,6 +8,8 @@ from api.routes.admin import admin_router
 import numpy as np
 import cv2
 
+from api.routes.admin import admin_router
+
 # initialize FastAPI object
 app = FastAPI(
     title="ExpenseTracker",
@@ -40,6 +42,8 @@ set_exception_handlers(app)
 app.include_router(receipt_scanning_router, prefix="/receipt")
 app.include_router(auth_router, prefix="/auth")
 app.include_router(expenses_router, prefix="/expenses")
+app.include_router(admin_router,prefix="/admin")
+
 app.include_router(admin_router,prefix="/admin")
 
 
