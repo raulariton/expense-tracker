@@ -10,7 +10,7 @@ def llm_process_text(ocr_text: str) -> str:
     # add your openrouter API key here
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
-        api_key="",
+        api_key="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",
     )
 
     prompt = """
