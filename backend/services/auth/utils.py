@@ -10,7 +10,8 @@ from starlette import status
 from db.database import SessionLocal
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-
+import secrets
+import string
 
 from services.auth.jwt import verify_token
 
@@ -25,6 +26,13 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def generate_password(length=12):
+    characters = string.ascii_letters + string.digits
+    password = ''.join(secrets.choice(characters) for _ in range(length))
+    return password
+
 
 bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

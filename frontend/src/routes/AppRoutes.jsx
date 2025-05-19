@@ -17,6 +17,7 @@ const AppRoutes = () => {
       <Route path="/" element={isAuthenticated ? <Dashboard /> : <Home />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/home" element={<Home />} />
+
       {/* Protected Routes */}
       <Route
         path="/dashboard"
