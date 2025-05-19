@@ -43,7 +43,7 @@ async def upload_file(file: UploadFile = File(...)):
     # FastAPI automatically serializes it to JSON
     return APIResponse(
         status_code=200,
-        expense_data=expense_data,
+        expense_data=expense_data.model_dump(),
     )
 
 # TODO: Any endpoint with a user dependency
