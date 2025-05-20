@@ -1,10 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import "../styles/Auth.css";
 import MainLayout from "../layouts/MainLayout";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import axios from "axios";
-import { AuthContext } from "../App";
+import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../context/AuthContext";
 
 const Auth = () => {
   const { lang } = useLanguage();
@@ -12,7 +13,7 @@ const Auth = () => {
   const [form, setForm] = useState({ email: "", password: "", confirm: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+  const auth = useAuth();
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -43,8 +44,16 @@ const Auth = () => {
       localStorage.setItem("access_token", access_token);
 
       setError("");
-      setIsAuthenticated(true);
-      navigate("/dashboard");
+
+      // update the auth context
+      auth.login();
+
+      if (jwtDecode(access_token).role === "admin") {
+        navigate("/admin_dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+
     } catch (error) {
       if (error.response && error.response.status === 401) {
         setError(lang.auth.errorInvalid);
@@ -65,16 +74,22 @@ const Auth = () => {
 
     // submit to server
     try {
-      const response = await axios.post("http://localhost:8000/auth/register", {
-        email: form.email,
-        password: form.password,
-      });
+      const response = await axios.post(
+        "http://localhost:8000/auth/register",
+        {
+          email: form.email,
+          password: form.password
+        }
+      );
 
       const access_token = response.data.access_token;
       localStorage.setItem("access_token", access_token);
 
       setError("");
-      setIsAuthenticated(true);
+
+      // update the auth context
+      auth.login();
+
       navigate("/dashboard");
     } catch (error) {
       if (error.response && error.response.status === 400) {
