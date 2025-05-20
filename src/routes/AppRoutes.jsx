@@ -6,6 +6,7 @@ import AddExpense from "../pages/AddExpense";
 import Statistics from "../pages/Statistics";
 import Home from "../pages/Home";
 import Settings from "../pages/Settings";
+import AdminDashboard from "../pages/DashboardAdmin";
 
 const AppRoutes = ({ isAuthenticated }) => {
   isAuthenticated=true; //for testing purposes
@@ -19,6 +20,10 @@ const AppRoutes = ({ isAuthenticated }) => {
       <Route
         path="/dashboard"
         element={isAuthenticated ? <Dashboard /> : <Navigate to="/auth" />}
+      />
+       <Route
+        path="/Admindashboard"
+        element={isAuthenticated ? <AdminDashboard /> : <Navigate to="/auth" />}
       />
       <Route
         path="/add-expense"
