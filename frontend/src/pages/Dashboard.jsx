@@ -1,10 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
 import SummaryCard from "../components/SummaryCard";
-import CategoryCard from "../components/CategoryCard";
 import ActivityItem from "../components/ActivityItem";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../App.jsx";
 import {
   FaCalendarAlt,
 } from "react-icons/fa";
@@ -17,21 +14,10 @@ import toast from "react-hot-toast";
 const Dashboard = () => {
   const { lang } = useLanguage();
 
-  const { isAuthenticated } = useContext(AuthContext);
   const [summary, setSummary] = useState(null);
   const [userRecentExpenses, setUserRecentExpenses] = useState(null);
 
-  if (!isAuthenticated) {
-    // TODO: Redirect to login page, and then back to dashboard
-    //  (proper handling)
-    return (
-      <MainLayout>
-        <div className="dashboard">
-          <p>Please log in to view your dashboard.</p>
-        </div>
-      </MainLayout>
-    );
-  }
+  // TODO: one useEffect for all requests
 
   // get summary
   useEffect( () => {
