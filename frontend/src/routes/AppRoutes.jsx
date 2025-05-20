@@ -7,6 +7,7 @@ import Statistics from "../pages/Statistics";
 import Home from "../pages/Home";
 import Settings from "../pages/Settings";
 import App, { AuthContext } from "../App";
+import AdminDashboard from "../pages/DashboardAdmin";
 
 const AppRoutes = () => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -21,6 +22,10 @@ const AppRoutes = () => {
       <Route
         path="/dashboard"
         element={isAuthenticated ? <Dashboard /> : <Navigate to="/auth" />}
+      />
+       <Route
+        path="/admin_dashboard"
+        element={isAuthenticated ? <AdminDashboard /> : <Navigate to="/auth" />}
       />
       <Route
         path="/add-expense"
