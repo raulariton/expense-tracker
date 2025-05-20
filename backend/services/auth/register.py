@@ -15,10 +15,13 @@ def create_user(
     :return: The created user
     """
 
+    # NOTE: role_id is set to
+    #  2 for admin users and
+    #  1 for regular users
     new_user_model = models.User(
         email=user_creation_request.email,
         hashed_password=bcrypt_context.hash(user_creation_request.password),
-        role_id=1 if user_creation_request.isAdmin else 2,
+        role_id=1 if not user_creation_request.isAdmin else 2,
     )
 
     db.add(new_user_model)

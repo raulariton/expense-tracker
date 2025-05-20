@@ -65,7 +65,7 @@ def get_stats(db: db_dependency, admin_logged_in: dict = Depends(get_current_adm
         func.sum(Expense.amount).label("total_amount")
     ).group_by(Expense.category).all()
 
-    # total number of users
+    # total number of users (including admins)
     user_count = db.query(User).count()
 
     return {
