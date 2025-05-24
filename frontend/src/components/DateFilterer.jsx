@@ -3,6 +3,9 @@ import { FaCalendarAlt } from "react-icons/fa";
 import "../styles/DateFilterer.css";
 
 const DateFilterer = ({ onFilterApply }) => {
+  // onFilterApply: function to call when filter is applied
+  // (fetching data using specified date range)
+
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -20,31 +23,31 @@ const DateFilterer = ({ onFilterApply }) => {
 
     // function temp variables
     const today = new Date();
-    let startDate = new Date();
-    let endDate = new Date();
+    let start = new Date();
+    let end = new Date();
 
     switch (filter) {
       case "thisWeek":
         // Set to beginning of current week (Monday)
-        startDate = new Date(today);
+        start = new Date(today);
         // + 1 to start from Monday
-        startDate.setDate(today.getDate() - today.getDay() + 1);
-        endDate = new Date(today);
+        start.setDate(today.getDate() - today.getDay() + 1);
+        end = new Date(today);
         break;
       case "thisMonth":
         // Set to beginning of current month
-        startDate = new Date(today.getFullYear(), today.getMonth(), 1);
-        endDate = new Date(today);
+        start = new Date(today.getFullYear(), today.getMonth(), 1);
+        end = new Date(today);
         break;
       case "lastMonth":
         // Set to beginning of last month
-        startDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-        endDate = new Date(today.getFullYear(), today.getMonth(), 0);
+        start = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        end = new Date(today.getFullYear(), today.getMonth(), 0);
         break;
     }
 
-    setStartDate(startDate);
-    setEndDate(endDate);
+    setStartDate(start);
+    setEndDate(end);
     onFilterApply({ startDate, endDate });
   };
 
@@ -95,6 +98,7 @@ const DateFilterer = ({ onFilterApply }) => {
         <div className="date-input-wrapper">
           <input
             type="date"
+            name="startDate"
             className="date-input"
             value={formatDate(startDate)}
             onChange={(e) => handleManualDateChange(e)}
@@ -104,6 +108,7 @@ const DateFilterer = ({ onFilterApply }) => {
         <div className="date-input-wrapper">
           <input
             type="date"
+            name="endDate"
             className="date-input"
             value={formatDate(endDate)}
             onChange={(e) => handleManualDateChange(e)}

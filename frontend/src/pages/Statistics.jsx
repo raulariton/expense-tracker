@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
 import "../styles/statistics.css";
 import axios from "axios";
@@ -16,17 +16,15 @@ import {
   CartesianGrid
 } from "recharts";
 import { useLanguage } from "../context/LanguageContext";
-import { AuthContext } from "../App.jsx";
 import toast from "react-hot-toast";
 import ActivityItem from "../components/ActivityItem.jsx";
 import PaginationButtons from "../components/PaginationButtons.jsx";
 import DateFilterer from "../components/DateFilterer.jsx";
-
-// TODO: Create a component for both charts; cleaner look
+import { useAuth } from "../context/AuthContext.jsx";
 
 const Statistics = () => {
   const { lang } = useLanguage();
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated } = useAuth();
   const colorOfCategory = {
     "Food & Dining": "#264653",
     "Shopping": "#2A9D8F",

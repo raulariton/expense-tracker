@@ -3,14 +3,23 @@ from models.receipt_scanning_models import Expense
 import re
 from datetime import date, time
 from dateutil import parser
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+dotenv_path = Path(__file__).resolve().parent.parent / ".env"
+load_dotenv(dotenv_path)
 
 def llm_process_text(ocr_text: str) -> str:
     from openai import OpenAI
 
+    timeout = 10  # seconds
+
     # add your openrouter API key here
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
-        api_key="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",
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+        timeout=timeout
     )
 
     prompt = """
@@ -21,7 +30,8 @@ def llm_process_text(ocr_text: str) -> str:
     Receipt text:
     {ocr_text}
 
-    Extract the following information and respond ONLY using this exact format:
+    Extract the following information and respond ONLY using this exact format.
+    Do not include any explanations or additional text.
 
     VENDOR: [Identified business name with corrected OCR errors]
     CATEGORY: [Identified category, MUST be one of the following: "Food & Dining", "Transport", "Shopping", "Bills" or "Other"] 
@@ -32,10 +42,12 @@ def llm_process_text(ocr_text: str) -> str:
     Guidelines:
     - As context, use Romanian vendors, shops, companies (for example LIDL, Kaufland, Profi, Carrefour, etc.)
     - If unsure about a vendor, use as is (don't correct it).
+    - Ensure that the total amount is logical, and matches the sum of various other items identified in the receipt.
     - The identified category must be one of the following: "Food & Dining", "Transport", "Shopping", "Bills" or "Other"
     - If you can't determine any field with reasonable confidence, use "Unknown"
     - Do not include any explanations or additional text
     - Always use the exact label format shown above
+    - Do NOT include any additional text or explanations.
     """
 
     fallback_response = """
@@ -46,7 +58,6 @@ def llm_process_text(ocr_text: str) -> str:
     TIME: Unknown
     """
 
-    timeout = 10  # seconds
 
     try:
         # NOTE: free model for now, to test the API
@@ -56,7 +67,6 @@ def llm_process_text(ocr_text: str) -> str:
                 {"role": "user",
                  "content": prompt.format(ocr_text=ocr_text)},
             ],
-            timeout=timeout,
         )
         return completion.choices[0].message.content
 
@@ -88,6 +98,13 @@ def get_expense_from_llm_response(llm_response: str) -> Expense:
     time_ = None
 
     # extract the values using regex
+    # NOTE: to understand each of these better, i recommend using
+    #  regex101.com
+    # generally,
+    # \s* means "zero or more whitespace"
+    # (.+) means "one or more of any character, except line terminators"
+    # thus the following patterns match (and extract) whatever text comes after
+    # each labels ("VENDOR", "CATEGORY", etc.) respectively
     vendor_pattern = r"VENDOR:\s*(.+)"
     category_pattern = r"CATEGORY:\s*(.+)"
     total_pattern = r"TOTAL:\s*(.+)"

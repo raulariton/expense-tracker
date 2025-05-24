@@ -27,7 +27,7 @@ def get_db():
     finally:
         db.close()
 
-
+# TODO: use bcrypt and JWT
 def generate_password(length=12):
     characters = string.ascii_letters + string.digits
     password = ''.join(secrets.choice(characters) for _ in range(length))

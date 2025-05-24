@@ -1,0 +1,83 @@
+.admin-dashboard {
+    padding-top: 40px;
+    background-color: #f9fafb;
+  }
+  
+  
+  .admin-columns {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  
+  
+  .admin-col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex: 1;
+  }
+  
+  
+  .admin-card-small,
+  .admin-card-large {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(133, 177, 249, 0.25);
+  }
+  
+  .admin-card-small {
+    height: 150px;
+  }
+  
+  .admin-card-large {
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+  }
+  
+  .admin-card h2,
+  .admin-card-small h2,
+  .admin-card-large h2 {
+    font-size: 2.5rem;
+    margin-bottom: 8px;
+    color: #111;
+    font-weight: bold;
+  }
+  
+  .admin-card p,
+  .admin-card-small p,
+  .admin-card-large p {
+    font-size: 1rem;
+    color: #666;
+  }
+  
+  .chart-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    color: #222;
+  }
+  
+  
+  @media (max-width: 1024px) {
+    .admin-columns {
+      flex-direction: column;
+    }
+  
+    .admin-card-small {
+      height: auto;
+    }
+  
+    .admin-card-large {
+      height: auto;
+    }
+  }
+  
