@@ -44,7 +44,6 @@ app.include_router(auth_router, prefix="/auth")
 app.include_router(expenses_router, prefix="/expenses")
 app.include_router(admin_router,prefix="/admin")
 
-app.include_router(admin_router,prefix="/admin")
 
 
 # test endpoint

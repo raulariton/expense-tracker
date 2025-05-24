@@ -81,11 +81,17 @@ export default {
       title: "Bine ai venit la ExpenseTracker",
       description: "Ține cont de cheltuielile tale, încarcă bonurile fiscale și primește perspective despre cheltuielile tale. Totul într-o interfață modernă și simplă.",
       ShomeTitle: "...",
-     
-    }
-    
-    
-    
+
+    },
+
+  // TODO: Fix romanian
+  admin: {
+    title: "Creaza Admin",
+    button: "Generaza parola pentru Admin",
+    passwordGeneration: "Parola Generata:"
+  }
+
+
     
   };
   
