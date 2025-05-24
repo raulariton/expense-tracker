@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
-import "../styles/dashboardAdmin.css";
+import "../styles/DashboardAdmin.css";
 import {
   PieChart,
   Pie,

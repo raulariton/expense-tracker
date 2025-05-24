@@ -1,0 +1,41 @@
+.password-box {
+  margin-top: 1rem;
+  background: #f3f3f3;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.generated-password {
+  font-family: monospace;
+  font-size: 1.2rem;
+  color: #000000;
+  margin-top: 0.5rem;
+}
+
+.password-outside-box{
+    padding-top: 5rem;
+
+}
+
+
+.create-admin{
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.admin-creation-box{
+    background: white;
+    padding: 32px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    min-height: 300px; /* added to keep consistent height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 80%;
+}

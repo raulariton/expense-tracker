@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from models.dbmodels import User,Role,Expense,ExpenseCategory
 from sqlalchemy import func
 from starlette import status
-
+from pydantic import BaseModel
 from services.auth.jwt import create_access_token
 from services.auth.register import get_user_by_email, create_user, UserCreationRequest
 from services.auth.utils import db_dependency,generate_password
@@ -10,6 +10,9 @@ from api.routes.auth import get_current_admin
 
 
 admin_router = APIRouter()
+
+class AdminCreateRequest(BaseModel):
+    email: str
 
 
 # TODO: Delete?
@@ -92,26 +95,34 @@ def get_stats(db: db_dependency, admin_logged_in: dict = Depends(get_current_adm
 
 @admin_router.post("/create_admin", status_code=status.HTTP_201_CREATED)
 def create_admin(
-        user_creation_request: UserCreationRequest,
+        request: AdminCreateRequest,
         db: db_dependency,
         admin_logged_in: dict = Depends(get_current_admin)
 ):
+    email = request.email
     """
     Creates a new admin user in the database.
     This endpoint is used by an admin user to create a new admin user.
     """
 
     # check for an existing user, using the entered email
-    existing_user = get_user_by_email(user_creation_request.email, db)
+    existing_user = get_user_by_email(email, db)
 
-    # if user exists, raise exception
+
+    # if user exists, change it's role
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="User already exists"
         )
+
+    generated_password = generate_password(12)
+    user_creation_request = UserCreationRequest(email=email, password=generated_password,isAdmin=True)
+
 
     create_user(db, user_creation_request)
 
     # NOTE: Unlike the register_user function (in auth.py), this function does not
     #  return a JWT as the admin that has created the new admin user
     #  should not be able to log in as the new user (using the JWT)
+
+    return generated_password

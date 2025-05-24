@@ -79,12 +79,16 @@ export default {
   },
   home: {
     title: "Welcome to ExpenseTracker",
-      description: "Track your spending easily, manage receipts, and gain insights into your expenses in a clean and modern interface.",
-      ShomeTitle: "...",
+    description: "Track your spending easily, manage receipts, and gain insights into your expenses in a clean and modern interface.",
+    ShomeTitle: "...",
      
+  },
+
+  admin: {
+    title: "Create new Admin",
+    button: "Generate Admin Password dada",
+    passwordGeneration: "Generated Password:"
   }
-  
-  
   
   
   

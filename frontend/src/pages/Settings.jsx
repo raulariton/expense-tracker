@@ -2,29 +2,26 @@ import React, { useState, useEffect } from "react";
 import MainLayout from "../layouts/MainLayout";
 import "../styles/Settings.css";
 import { useLanguage } from "../context/LanguageContext";
+import { jwtDecode } from "jwt-decode";
 
 const Settings = () => {
   const { lang } = useLanguage();
+  const [userEmail, setUserEmail] = useState("");
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({
-    name: "",
-    lastName: "",
     email: "",
     createdAt: "",
     password: ""
   });
 
+
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (storedUser) {
-      setForm({
-        name: storedUser.name || "",
-        lastName: storedUser.lastName || "",
-        email: storedUser.email,
-        createdAt: storedUser.createdAt,
-        password: ""
-      });
-    }
+
+    const token = localStorage.getItem("access_token");
+    setUserEmail(jwtDecode(token).sub);
+
+
   }, []);
 
   const handleChange = (e) => {
@@ -59,27 +56,14 @@ const Settings = () => {
         {!editing ? (
           <div className="profile-card">
             <h2>{lang.settings.viewTitle}</h2>
-            <p><strong>{lang.settings.name}:</strong> {form.name || "—"}</p>
-            <p><strong>{lang.settings.lastName}:</strong> {form.lastName || "—"}</p>
-            <p><strong>{lang.settings.email}:</strong> {form.email}</p>
-            <p><strong>{lang.settings.created}:</strong> {form.createdAt}</p>
-            <button className="edit-btn" onClick={() => setEditing(true)}>
-              {lang.settings.edit}
-            </button>
+            <p><strong>{lang.settings.email}:</strong> {userEmail}</p>
+          {/*  <button className="edit-btn" onClick={() => setEditing(true)}>*/}
+          {/*    {lang.settings.edit}*/}
+          {/*  </button> */}
           </div>
         ) : (
           <form className="settings-form" onSubmit={handleSubmit}>
             <h2>{lang.settings.edit}</h2>
-
-            <label>
-              {lang.settings.name}
-              <input name="name" value={form.name} onChange={handleChange} />
-            </label>
-
-            <label>
-              {lang.settings.lastName}
-              <input name="lastName" value={form.lastName} onChange={handleChange} />
-            </label>
 
             <label>
               {lang.settings.email}
