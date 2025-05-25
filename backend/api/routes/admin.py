@@ -11,15 +11,12 @@ from api.routes.auth import get_current_admin
 
 admin_router = APIRouter()
 
-class AdminCreateRequest(BaseModel):
-    email: str
-
 
 # TODO: Delete?
 @admin_router.get("/users")
 def get_all_users(
-        db: db_dependency,
-        admin_logged_in: dict = Depends(get_current_admin)
+    db: db_dependency,
+    admin_logged_in: dict = Depends(get_current_admin)
 ):
     """
     Get the role of every user
@@ -39,7 +36,10 @@ def get_all_users(
 
 
 @admin_router.get("/stats")
-def get_stats(db: db_dependency, admin_logged_in: dict = Depends(get_current_admin)):
+def get_stats(
+    db: db_dependency,
+    admin_logged_in: dict = Depends(get_current_admin)
+):
     """
     Gets:
     - The total number of expenses logged by all users
@@ -95,34 +95,36 @@ def get_stats(db: db_dependency, admin_logged_in: dict = Depends(get_current_adm
 
 @admin_router.post("/create_admin", status_code=status.HTTP_201_CREATED)
 def create_admin(
-        request: AdminCreateRequest,
-        db: db_dependency,
-        admin_logged_in: dict = Depends(get_current_admin)
+    admin_creation_request: UserCreationRequest,
+    db: db_dependency,
+    admin_logged_in: dict = Depends(get_current_admin)
 ):
-    email = request.email
     """
     Creates a new admin user in the database.
     This endpoint is used by an admin user to create a new admin user.
     """
+    # manually set UserCreationRequest as an admin request
+    admin_creation_request.isAdmin = True
 
     # check for an existing user, using the entered email
-    existing_user = get_user_by_email(email, db)
+    existing_user = get_user_by_email(admin_creation_request.email, db)
 
-
-    # if user exists, change it's role
+    # if user (regular user or admin) (with the same email) exists,
+    # raise exception
     if existing_user:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="User already exists"
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already in use"
         )
 
-    generated_password = generate_password(12)
-    user_creation_request = UserCreationRequest(email=email, password=generated_password,isAdmin=True)
+    # since UserCreationRequests for admin users
+    # do not require a password,
+    # generate a random password
+    admin_creation_request.password = generate_password()
 
-
-    create_user(db, user_creation_request)
+    create_user(db, admin_creation_request)
 
     # NOTE: Unlike the register_user function (in auth.py), this function does not
     #  return a JWT as the admin that has created the new admin user
     #  should not be able to log in as the new user (using the JWT)
 
-    return generated_password
+    return admin_creation_request.password

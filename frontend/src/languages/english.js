@@ -83,13 +83,9 @@ export default {
     ShomeTitle: "...",
      
   },
-
   admin: {
     title: "Create new Admin",
-    button: "Generate Admin Password dada",
+    button: "Create & Generate Password",
     passwordGeneration: "Generated Password:"
   }
-  
-  
-  
 };
