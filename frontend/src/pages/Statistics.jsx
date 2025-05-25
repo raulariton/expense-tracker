@@ -48,10 +48,12 @@ const Statistics = () => {
   const expensesPerPage = 5; // number of expenses to show per page
   const [paginatedExpenses, setPaginatedExpenses] = useState([]);
   const [totalExpenses, setTotalExpenses] = useState(0);
+  const [dateRangeFilter, setDateRangeFilter] = useState({
+    startDate: null,
+    endDate: null
+  });
 
   useEffect(() => {
-    // fetch data
-
     // get all expenses
     const getAllExpenses = async () => {
       const token = localStorage.getItem("access_token");
@@ -63,11 +65,19 @@ const Statistics = () => {
           {
             headers: {
               Authorization: `Bearer ${token}`
+            },
+            params: {
+              start_date: dateRangeFilter.startDate ?? null,
+              end_date: dateRangeFilter.endDate ?? null
             }
           }
         );
 
-        setExpensesList(response.data.expenses);
+        // avoid setting expensesList if date filter is applied
+        // to avoid rendering the area chart with data filtered by date
+        if (!dateRangeFilter.startDate && !dateRangeFilter.endDate)
+          setExpensesList(response.data.expenses);
+
         setTotalExpenses(response.data.expenses.length);
 
       } catch (error) {
@@ -75,6 +85,11 @@ const Statistics = () => {
       }
     };
 
+    getAllExpenses();
+
+  }, [dateRangeFilter.startDate, dateRangeFilter.endDate]);
+
+  useEffect(() => {
     const getCategoryTotals = async () => {
       const token = localStorage.getItem("access_token");
 
@@ -102,10 +117,6 @@ const Statistics = () => {
         toast.error("Error occurred: " + error.message);
       }
     };
-
-
-      // get all user expenses to group them by date
-      getAllExpenses();
 
       // get total by category
       getCategoryTotals();
@@ -159,12 +170,18 @@ const Statistics = () => {
             },
             params: {
               limit: expensesPerPage,
-              offset: (pageNumber - 1) * expensesPerPage
+              offset: (pageNumber - 1) * expensesPerPage,
+              start_date: dateRangeFilter.startDate ?? null,
+              end_date: dateRangeFilter.endDate ?? null
             }
           }
         );
 
         setPaginatedExpenses(response.data.expenses);
+
+        // only set total expenses (for pagination) if date filter has been applied
+        // if (dateRangeFilter.startDate && dateRangeFilter.endDate)
+        //   setTotalExpenses(response.data.expenses.length)
 
       } catch (error) {
         toast.error("Error occurred: " + error.message);
@@ -172,7 +189,7 @@ const Statistics = () => {
     }
 
     getExpensesWithPagination();
-  }, [pageNumber, expensesPerPage]);
+  }, [pageNumber, expensesPerPage, dateRangeFilter.startDate, dateRangeFilter.endDate]);
 
   if (!isAuthenticated) {
     return (
@@ -197,6 +214,16 @@ const Statistics = () => {
       default:
         return lang.expense_categories.other;
     }
+  }
+
+  const handleDateFilterApply = (dateRange) => {
+    setDateRangeFilter({
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate
+    });
+
+    // reset page number to 1 when applying a new filter
+    setPageNumber(1);
   }
 
   const localizedCategoryTotals = categoryTotals.map(category => ({
@@ -262,7 +289,7 @@ const Statistics = () => {
           {/* TODO: Grouping by date */}
           <div className="expense-card">
             <h3>{lang.statistics.title}</h3>
-            <DateFilterer />
+            <DateFilterer onFilterApply={handleDateFilterApply}/>
             <div className="expense-list"
              style={{ height: `${expensesPerPage * 4.1}rem` }}>
             {paginatedExpenses && paginatedExpenses.map((expense, index) => (
