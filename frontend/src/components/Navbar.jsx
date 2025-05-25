@@ -70,6 +70,11 @@ const Navbar = () => {
               >
                 Create Admin
               </NavLink>
+              <NavLink
+                to="/admin-scan-receipt"
+              >
+                Scan Receipt
+              </NavLink>
           </>
         )
       )}

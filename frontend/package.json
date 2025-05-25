@@ -21,6 +21,7 @@
     "npm-merge-driver": "^2.3.6",
     "postcss": "^8.5.3",
     "react": "^19.0.0",
+    "react-code-blocks": "^0.1.6",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.55.0",
     "react-hot-toast": "^2.5.2",
