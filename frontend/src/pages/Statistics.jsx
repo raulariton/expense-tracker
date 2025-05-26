@@ -298,7 +298,7 @@ const Statistics = () => {
                 category={expense.category}
                 name={expense.vendor}
                 dateTime={expense.datetime}
-                amount={`$${(expense.total).toFixed(2)}`}
+                amount={`${(expense.total).toFixed(2)} RON`}
               />
             ))}
             </div>
