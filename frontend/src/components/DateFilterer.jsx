@@ -48,7 +48,6 @@ const DateFilterer = ({ onFilterApply }) => {
 
     setStartDate(start);
     setEndDate(end);
-    onFilterApply({ startDate, endDate });
   };
 
   const handleManualDateChange = (e) => {
@@ -62,6 +61,16 @@ const DateFilterer = ({ onFilterApply }) => {
     } else if (name === "endDate") {
       setEndDate(new Date(value));
     }
+
+    // set minimum and max attributes for date inputs
+    const startDateInput = document.querySelector('input[name="startDate"]');
+    const endDateInput = document.querySelector('input[name="endDate"]');
+
+    // start date cannot be after end date
+    startDateInput.setAttribute("max", formatDate(endDate));
+
+    // end date cannot be before start date
+    endDateInput.setAttribute("min", formatDate(startDate));
   };
 
   const applyFilter = () => {
@@ -112,6 +121,7 @@ const DateFilterer = ({ onFilterApply }) => {
             className="date-input"
             value={formatDate(endDate)}
             onChange={(e) => handleManualDateChange(e)}
+            max={formatDate(new Date())} // end date cannot be after today
           />
         </div>
         <button className="apply-btn" onClick={applyFilter}>

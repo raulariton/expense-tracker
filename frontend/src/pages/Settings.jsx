@@ -16,7 +16,6 @@ const Settings = () => {
 
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("currentUser"));
 
     const token = localStorage.getItem("access_token");
     setUserEmail(jwtDecode(token).sub);

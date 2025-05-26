@@ -83,15 +83,10 @@ export default {
       ShomeTitle: "...",
 
     },
-
-  // TODO: Fix romanian
   admin: {
-    title: "Creaza Admin",
-    button: "Generaza parola pentru Admin",
-    passwordGeneration: "Parola Generata:"
+    title: "Creează Admin nou",
+    button: "Creează & Generează Parolă",
+    passwordGeneration: "Parola generată:",
   }
-
-
-    
-  };
+};
   

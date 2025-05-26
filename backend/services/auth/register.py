@@ -4,7 +4,7 @@ from services.auth.utils import db_dependency, bcrypt_context
 
 class UserCreationRequest(BaseModel):
     email: str
-    password: str
+    password: str = None
     isAdmin: bool = False
 
 def create_user(

@@ -1,12 +1,14 @@
 .add-expense-container {
   background-color: #f8f9fb;
   padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 h1 {
   font-size: 2rem;
   color: #2563eb;
-  margin-bottom: 24px;
 }
 
 .tabs {
@@ -75,28 +77,33 @@ h1 {
 
 .scan-row {
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
   gap: 24px;
-  margin-top: 24px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  padding: 24px;
+}
+
+.upload-area-and-results {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    width: 100%;
+    height: fit-content;
 }
 
 .scan-section {
-  flex: 1;
-  flex-grow: 2;
+  flex: 1.5;
   justify-content: center;
   width: 100%;
-  background-color: #fff;
-  padding: 24px;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   display: flex;
   flex-direction: column;
   gap: 16px;
-  height: 25rem
 }
 
 .upload-area {
-  flex: 1;
   position: relative;
   width: 100%;
   border: 2px dashed #ccc;
@@ -107,6 +114,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 22.5rem;
 }
 
 .upload-area input[type="file"] {
@@ -136,11 +144,31 @@ h1 {
   border: 1px solid #ddd;
   border-radius: 6px;
   overflow: hidden;
-  height: 25rem;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #fafafa;
+}
+
+.delete-image-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 80%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.2s;
 }
 
 .receipt-preview {
@@ -148,6 +176,12 @@ h1 {
   width: auto;
   object-fit: contain;
   align-self: center;
+}
+
+img.receipt-preview {
+  max-width: 100%;
+  max-height: 25rem;
+  object-fit: contain;
 }
 
 .btn-submit-api {
@@ -194,14 +228,12 @@ h1 {
 /* OCR details shown in place of QR code */
 .ocr-results-container {
   flex: 1;
-  flex-grow: 1;
   min-width: 280px;
   background-color: #fff;
   padding: 24px;
   border-radius: 10px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   display: flex;
-  justify-content: center;
   flex-direction: column;
   gap: 14px;
 }
@@ -215,8 +247,11 @@ h1 {
 }
 
 .ocr-results-container .loader {
-  align-self: center;
-  justify-self: center;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ocr-details h2 {

@@ -94,4 +94,5 @@ async def get_current_admin(token: str = Depends(oauth2_bearer)):
             detail="Could not validate user",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
     return user

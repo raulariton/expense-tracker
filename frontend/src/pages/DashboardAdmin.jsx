@@ -60,7 +60,7 @@ const AdminDashboard = () => {
               <p>Users registered</p>
             </div>
             <div className="admin-card-large">
-              <h2>${stats?.expenses_total || '-'}</h2>
+              <h2>{stats?.expenses_total || '-'} RON</h2>
               <p>worth of expenses logged</p>
             </div>
           </div>

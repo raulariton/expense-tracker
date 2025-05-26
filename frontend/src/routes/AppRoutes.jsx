@@ -6,9 +6,11 @@ import AddExpense from "../pages/AddExpense";
 import Statistics from "../pages/Statistics";
 import Home from "../pages/Home";
 import Settings from "../pages/Settings";
+import App, { AuthContext } from "../App";
 import AdminDashboard from "../pages/DashboardAdmin";
 import CreateAdmin from "../pages/CreateAdmin.jsx";
 import { useAuth } from "../context/AuthContext";
+import ScanReceiptAdmin from "../pages/ScanReceiptAdmin.jsx";
 
 const AppRoutes = () => {
   const auth = useAuth();
@@ -35,6 +37,10 @@ const AppRoutes = () => {
       <Route
         path="/create-admin"
         element={auth.isAuthenticated && isAdmin ? <CreateAdmin /> : <Navigate to="/auth" />}
+      />
+      <Route
+        path="/admin-scan-receipt"
+        element={auth.isAuthenticated ? <ScanReceiptAdmin /> : <Navigate to="/auth" />}
       />
       <Route
         path="/add-expense"

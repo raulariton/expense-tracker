@@ -5,13 +5,11 @@ import { useLanguage } from "../context/LanguageContext.jsx";
 import "../styles/CreateAdmin.css";
 
 const CreateAdmin = () => {
-
   const { lang } = useLanguage();
   const [form,setForm] = useState({ email:""});
   const [error, setError] = useState("");
-  const [resultMessage, setResultMessage] = useState('');
+  const [generatedPassword, setGeneratedPassword] = useState('');
 
-  const token = localStorage.getItem("access_token");
 
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -21,12 +19,12 @@ const CreateAdmin = () => {
   const handleCreateAdmin = async(e) => {
     e.preventDefault();
 
-    setResultMessage('');
-    setError('')
+    const token = localStorage.getItem("access_token");
 
+    setGeneratedPassword('');
+    setError('');
 
     const formData = new FormData();
-
     formData.append("email", form.email);
 
     try {
@@ -41,13 +39,11 @@ const CreateAdmin = () => {
         },
       );
 
+      setGeneratedPassword(response.data);
 
-      console.log(response)
-
-      setResultMessage(`${response.data}`);
       } catch (error) {
       if (error.response && error.response.status === 400) {
-        setError(lang.auth.errorInvalid);
+        setError(lang.auth.errorExists);
       } else {
         setError(error.message);
       }
@@ -76,17 +72,14 @@ const CreateAdmin = () => {
                   {lang.admin.button}
                 </button>
               </form>
-          {resultMessage && (
+          {generatedPassword && (
             <div className="password-outside-box">
               <p><strong>{lang.admin.passwordGeneration}</strong></p>
               <div className="password-box">
-                <div className="generated-password">{resultMessage}</div>
+                <div className="generated-password">{generatedPassword}</div>
               </div>
             </div>
-
-)}
-
-
+          )}
         </div>
       </div>
     </MainLayout>
