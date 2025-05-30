@@ -85,8 +85,9 @@ export default {
     },
   admin: {
     title: "Creează Admin nou",
-    button: "Creează & Generează Parolă",
-    passwordGeneration: "Parola generată:",
+    button: "Creează Admin",
+    response: "Status: ",
+    adminList: "Lista Adminilor"
   }
 };
   

@@ -85,7 +85,8 @@ export default {
   },
   admin: {
     title: "Create new Admin",
-    button: "Create & Generate Password",
-    passwordGeneration: "Generated Password:"
+    button: "Create Admin",
+    response: "Status: ",
+    adminList: "Admin List"
   }
 };

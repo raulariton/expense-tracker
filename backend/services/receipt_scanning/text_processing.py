@@ -45,7 +45,7 @@ def llm_process_text(ocr_text: str) -> str:
     - Ensure that the total amount is logical, and matches the sum of various other items identified in the receipt.
     - The identified category must be one of the following: "Food & Dining", "Transport", "Shopping", "Bills" or "Other"
     - If you can't determine any field with reasonable confidence, use "Unknown"
-    - Do not include any explanations or additional text
+    - Do NOT include any type of parenthesis.
     - Always use the exact label format shown above
     - Do NOT include any additional text or explanations.
     """

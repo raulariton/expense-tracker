@@ -14,28 +14,75 @@
     text-align: center;
 }
 
+
+.admin_text_wrapper{
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+.admin-card {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    align-items: center;
+
+}
+
 .password-outside-box{
     padding-top: 2.5rem;
 }
 
+.card.admin-table{
+    min-width: 500px;
+
+}
+.wrapper{
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+}
+
+
 
 .create-admin{
     padding-top: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: auto;
+    grid-auto-rows: auto;
+}
+
+.space{
+    padding: 5rem;
+}
+
+.admin-scroll-body {
+  max-height: 300px; /* scrollable height */
+  overflow-y: auto;
+  margin-top: 12px;
+  padding-right: 8px; /* spacing for scrollbar */
+}
+
+
+.admin-card-info{
 
 }
 
-.admin-creation-box{
+.card{
     background: white;
     padding: 32px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     min-height: 300px; /* added to keep consistent height */
+    min-width: 500px; /* added to keep consistent height */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 80%;
+    width: 100%;
+
 }
