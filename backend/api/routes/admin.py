@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
-from models.dbmodels import User,Role,Expense,ExpenseCategory
+from models.dbmodels import User,Role,Expense,ExpenseCategory,UserInfo
 from sqlalchemy import func
 from starlette import status
+from datetime import date
 
 from services.auth.jwt import create_access_token
 from services.auth.register import get_user_by_email, create_user, UserCreationRequest
@@ -10,11 +11,11 @@ from api.routes.auth import get_current_admin
 from models.mailConfig import send_message
 
 
-admin_router = APIRouter()
+router = APIRouter()
 
 
 # TODO: Delete?
-@admin_router.get("/users")
+@router.get("/users")
 def get_all_users(
     db: db_dependency,
     admin_logged_in: dict = Depends(get_current_admin)
@@ -36,7 +37,7 @@ def get_all_users(
     ]
 
 
-@admin_router.get("/stats")
+@router.get("/stats")
 def get_stats(
     db: db_dependency,
     admin_logged_in: dict = Depends(get_current_admin)
@@ -94,7 +95,7 @@ def get_stats(
         "user_count": user_count
     }
 
-@admin_router.post("/create_admin", status_code=status.HTTP_201_CREATED)
+@router.post("/create_admin", status_code=status.HTTP_201_CREATED)
 async def create_admin(
     admin_creation_request: UserCreationRequest,
     db: db_dependency,
@@ -122,8 +123,8 @@ async def create_admin(
     # generate a random password
     admin_creation_request.password = generate_password()
 
-
-    create_user(db, admin_creation_request)
+    #Only used for creation, no need for return
+    create_user(db, admin_creation_request,admin_created=True)
 
     #Send the password to the submitted email
     try:
@@ -137,11 +138,30 @@ async def create_admin(
 
     return "Password Message Sent"
 
-@admin_router.get("/admin_table")
+@router.get("/admin_table")
 def get_admins(
         db: db_dependency,
         admin_logged_in: dict = Depends(get_current_admin)
 ):
-    result = db.query(User.id,User.email).filter(User.role_id == 2).all()
-    admins = [{"id": admin_id, "email": email} for admin_id, email in result]
+
+
+    result = db.query(
+        User.id,
+        User.email,
+        UserInfo.creation_date,
+        UserInfo.username
+    ).join(UserInfo,
+        User.id == UserInfo.id_user
+    ).filter(User.role_id == 2).all()
+
+
+
+
+    admins = [{"id": admin_id,
+               "email": email,
+               "creation_date":creation_date,
+               "username":username
+
+               } for admin_id, email, creation_date, username in result]
+
     return admins

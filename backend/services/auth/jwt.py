@@ -85,7 +85,8 @@ def verify_admin_token(token: Annotated[str, Depends(oauth2_bearer)]):
         email: str = payload.get("sub")
         user_id: int = payload.get("user_id")
         user_role: str = payload.get("role")
-        if email is None or user_id is None or user_role != "admin":
+        print(user_role)
+        if email is None or user_id is None or user_role != "Admin":
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                                 detail="Could not validate user")
 

@@ -24,7 +24,6 @@ const CreateAdmin = () => {
           },
         });
 
-        // Assuming response.data is like: [[12, 'email@h.com'], [3, 'another@email.com']]
         setAdmins(response.data);
       } catch (error) {
         toast.error("Error occurred: " + error.message);
@@ -42,6 +41,7 @@ const CreateAdmin = () => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
+
 
   const handleCreateAdmin = async(e) => {
     e.preventDefault();
@@ -84,8 +84,6 @@ const CreateAdmin = () => {
     const [expanded,setExpanded] = useState(false);
 
 
-
-
     return (
       <div className="admin-card">
         <div className="admin_text_wrapper">
@@ -97,8 +95,8 @@ const CreateAdmin = () => {
         </div>
       {expanded && (
         <div className="admin-details">
-          <p><strong>Created at:</strong> - </p>
-          <p><strong>Status:</strong> N/A</p>
+          <p><strong>Created at:</strong> {admin.creation_date} </p>
+          <p><strong>Username:</strong> {admin.username}</p>
         </div>
       )}
     </div>

@@ -1,5 +1,4 @@
 import smtplib, ssl
-from email.message import EmailMessage
 from email.mime.text import MIMEText
 import os
 

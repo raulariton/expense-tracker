@@ -6,38 +6,45 @@ from services.auth.jwt import Token, create_access_token, verify_token, oauth2_b
 from services.auth.login import authenticate_user
 from services.auth.register import UserCreationRequest, create_user, get_user_by_email
 from services.auth.utils import db_dependency
+from models.user_data_models import TokenWithUserData
 
 
 router = APIRouter()
 
 # This endpoint is used to log in
-@router.post("/token", response_model=Token)
+@router.post("/token", response_model=TokenWithUserData)
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: db_dependency
 ):
+
     """
     Logs in a user and returns an access token (JWT).
     """
-    # check if user with matching email and password exists
-    user = authenticate_user(form_data.username, form_data.password, db)
+    # check if user with matching email and password exists & retrieve user data
+    user_data = authenticate_user(form_data.username, form_data.password, db)
 
     # TODO: Use HTTPExceptions for all server exceptions
-    if not user:
+    if not user_data:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+
+
     # user exists (match found)
-    # get role
-    user_role = user.role.role
 
     # create access token
     # NOTE: JWT could be extended by using the refresh token (API calls)
-    access_token = create_access_token(user.email, user.id, user_role)
+    access_token = create_access_token(user_data.email, user_data.id, user_data.role)
 
-    return {"access_token": access_token, "token_type": "bearer"}
+
+
+    return {"access_token": access_token,
+            "token_type": "bearer",
+            "user_data": user_data
+            }
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
@@ -54,7 +61,8 @@ def register_user(user_creation_request: UserCreationRequest, db: db_dependency)
             status_code=status.HTTP_400_BAD_REQUEST, detail="User already exists"
         )
 
-    user = create_user(db, user_creation_request)
+    user,user_info = create_user(db, user_creation_request,admin_created=False)
+
 
     # create access token
     # JWT will be valid for 30 minutes
@@ -62,7 +70,10 @@ def register_user(user_creation_request: UserCreationRequest, db: db_dependency)
     user_role = user.role.role # for readability
     access_token = create_access_token(user.email, user.id, user_role)
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {"access_token": access_token,
+            "token_type": "bearer",
+            "user_data": user_info
+            }
 
 # NOTE: This endpoint will be used internally,
 #  through dependency injection

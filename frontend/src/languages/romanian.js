@@ -52,13 +52,15 @@ export default {
       title: "Setări cont",
       viewTitle: "Informații cont",
       name: "Prenume",
-      lastName: "Nume",
+      Username: "Username",
       email: "Email",
       password: "Parolă",
       created: "Cont creat",
       edit: "Editează profilul",
       cancel: "Anulează",
       save: "Salvează",
+      role: "Rol",
+      userExists: "Nume deja folosit"
     },
     auth: {
       loginTab: "Conectare",

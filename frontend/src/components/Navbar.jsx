@@ -13,7 +13,7 @@ const Navbar = () => {
   const { currentLangCode, setLanguage, lang } = useLanguage();
 
   const auth = useAuth();
-  const isAdmin = auth.userRole === "admin";
+  const isAdmin = auth.userRole === "Admin";
 
   const isActive = (path) => location.pathname === path;
 

@@ -13,7 +13,9 @@ import ScanReceiptAdmin from "../pages/ScanReceiptAdmin.jsx";
 
 const AppRoutes = () => {
   const auth = useAuth();
-  const isAdmin = auth.userRole === "admin";
+  const isAdmin = auth.userRole === "Admin";
+
+  console.log(auth.userRole)
 
   return (
     <Routes>
@@ -21,6 +23,7 @@ const AppRoutes = () => {
       <Route path="/" element={
         auth.isAuthenticated ? (isAdmin ? <AdminDashboard /> : <Dashboard />) : <Home/>
       }/>
+
       <Route path="/auth" element={<Auth />} />
       <Route path="/home" element={<Home />} />
 

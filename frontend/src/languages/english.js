@@ -52,13 +52,15 @@ export default {
     title: "Account Settings",
     viewTitle: "Account Information",
     name: "First Name",
-    lastName: "Last Name",
+    username: "Username",
     email: "Email",
     password: "Password",
     created: "Account Created",
     edit: "Edit Profile",
     cancel: "Cancel",
-    save: "Save Changes"
+    save: "Save Changes",
+    role: "Role",
+    userExists: "Username already taken"
   },
   auth: {
     loginTab: "Login",
