@@ -81,6 +81,8 @@ const Settings = () => {
       if(response.data){
         user_data.username = form.username
         localStorage.setItem("user_info",JSON.stringify(user_data))
+
+        setOriginalForm(form)
       }
 
 

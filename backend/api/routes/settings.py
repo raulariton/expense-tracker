@@ -7,7 +7,6 @@ from api.routes.auth import get_current_user
 from services.auth.utils import db_dependency
 from models.dbmodels import UserInfo
 from typing import Dict
-from re import *
 
 
 router = APIRouter()
@@ -24,8 +23,6 @@ async def change_username(
     new_username = data["username"]
 
     #USERNAME STRING VALIDATION IS DONE ON FRONTEND
-
-    #TODO: Validate username already existing
 
     # Verify if username is taken
     if db.query(UserInfo.username).filter(UserInfo.username == new_username).first():

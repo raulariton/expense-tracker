@@ -52,7 +52,7 @@ export default {
       title: "Setări cont",
       viewTitle: "Informații cont",
       name: "Prenume",
-      Username: "Username",
+      username: "Nume Utilizator",
       email: "Email",
       password: "Parolă",
       created: "Cont creat",

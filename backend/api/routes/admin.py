@@ -38,7 +38,7 @@ def get_all_users(
 
 
 @router.get("/stats")
-def get_stats(
+async def get_stats(
     db: db_dependency,
     admin_logged_in: dict = Depends(get_current_admin)
 ):
@@ -139,7 +139,7 @@ async def create_admin(
     return "Password Message Sent"
 
 @router.get("/admin_table")
-def get_admins(
+async def get_admins(
         db: db_dependency,
         admin_logged_in: dict = Depends(get_current_admin)
 ):
