@@ -8,6 +8,7 @@ def authenticate_user(email: str, password: str,
     """
     Authenticates the user (happens during login) by
     checking if the given email and password match.
+    :return: The User object if authentication is successful, otherwise `False`.
     """
     # find user in db
     user = db.query(models.User).filter(models.User.email == email).first()

@@ -10,6 +10,9 @@ from services.auth.utils import db_dependency, generate_password
 
 admin_router = APIRouter()
 
+# function configuration, to be used as a dependency
+def get_current_admin(token: str = Depends(oauth2_bearer)):
+    return get_current_user(token, expected_user_role=ADMIN_USER_ROLE)
 
 
 # NOTE: unused endpoint
