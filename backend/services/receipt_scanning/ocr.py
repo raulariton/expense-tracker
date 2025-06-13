@@ -1,12 +1,7 @@
-import math
 import cv2
-import imutils
-from imutils.perspective import four_point_transform
 import pytesseract
 import easyocr
-import re
 import numpy as np
-from ultralytics import YOLO
 
 EASYOCR = 0
 TESSERACT = 1

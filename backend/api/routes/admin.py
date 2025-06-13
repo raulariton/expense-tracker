@@ -1,18 +1,19 @@
 from fastapi import APIRouter, Depends, HTTPException
-from models.dbmodels import User,Role,Expense,ExpenseCategory
 from sqlalchemy import func
 from starlette import status
-from pydantic import BaseModel
-from services.auth.jwt import create_access_token
-from services.auth.register import get_user_by_email, create_user, UserCreationRequest
-from services.auth.utils import db_dependency,generate_password
-from api.routes.auth import get_current_admin
 
+from api.routes.auth import get_current_user
+from models.dbmodels import User, Expense
+from services.auth.jwt import ADMIN_USER_ROLE, oauth2_bearer
+from services.auth.register import get_user_by_email, create_user, UserCreationRequest
+from services.auth.utils import db_dependency, generate_password
 
 admin_router = APIRouter()
 
 
-# TODO: Delete?
+
+# NOTE: unused endpoint
+# TODO: remove?
 @admin_router.get("/users")
 def get_all_users(
     db: db_dependency,

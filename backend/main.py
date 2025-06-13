@@ -1,12 +1,8 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.exceptions import set_exception_handlers
 from api import receipt_scanning_router, auth_router, expenses_router
-from api.routes.admin import admin_router
-
-import numpy as np
-import cv2
 
 from api.routes.admin import admin_router
 
@@ -28,8 +24,8 @@ origins = [
 # the API (in our case, the frontend)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    # allow sending JWT tokens (?)
+    allow_origins=origins,
+    # allow sending cookies with requests
     allow_credentials=True,
     # allow all methods (GET, POST, PUT, etc.)
     allow_methods=["*"],

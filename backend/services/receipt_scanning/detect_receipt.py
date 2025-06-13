@@ -4,10 +4,7 @@ import cv2
 import numpy as np
 import torch
 import torchvision.transforms as torchvision_T
-from torchvision.models.segmentation import (
-    deeplabv3_resnet50,
-    deeplabv3_mobilenet_v3_large,
-)
+from torchvision.models.segmentation import deeplabv3_mobilenet_v3_large
 
 from models.exceptions import (
     SegmentationModelError,

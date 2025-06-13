@@ -1,5 +1,4 @@
 from fastapi import APIRouter, File, UploadFile, Depends
-
 from models.dbmodels import ExpenseCategory
 from models.receipt_scanning_models import APIResponse, Expense
 from services.receipt_scanning.detect_receipt import detect_receipt

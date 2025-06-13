@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Enum, DateTime, Floa
 from sqlalchemy.orm import relationship
 from db.database import Base
 import enum
-import uuid
 
 # enumeration for expense categories
 class ExpenseCategory(enum.Enum):

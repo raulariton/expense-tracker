@@ -70,7 +70,7 @@ def llm_process_text(ocr_text: str) -> str:
         )
         return completion.choices[0].message.content
 
-    except Exception as e:
+    except Exception:
         return fallback_response
 
 
