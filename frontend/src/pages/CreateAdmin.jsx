@@ -1,11 +1,12 @@
 import MainLayout from "../layouts/MainLayout";
 import React, { useState } from "react";
-import axios from "axios";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import "../styles/CreateAdmin.css";
+import useAxiosPrivate from "../hooks/useAxiosPrivate.js";
 
 const CreateAdmin = () => {
   const { lang } = useLanguage();
+  const axiosPrivate = useAxiosPrivate();
   const [form,setForm] = useState({ email:""});
   const [error, setError] = useState("");
   const [generatedPassword, setGeneratedPassword] = useState('');
@@ -19,8 +20,6 @@ const CreateAdmin = () => {
   const handleCreateAdmin = async(e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("access_token");
-
     setGeneratedPassword('');
     setError('');
 
@@ -28,15 +27,14 @@ const CreateAdmin = () => {
     formData.append("email", form.email);
 
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/admin/create_admin",
+      const response = await axiosPrivate.post(
+        "/admin/create_admin",
         formData,
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
           },
-        },
+        }
       );
 
       setGeneratedPassword(response.data);

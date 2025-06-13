@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
 import "../styles/statistics.css";
-import axios from "axios";
 import {
   PieChart,
   Pie,
@@ -21,9 +20,11 @@ import ActivityItem from "../components/ActivityItem.jsx";
 import PaginationButtons from "../components/PaginationButtons.jsx";
 import DateFilterer from "../components/DateFilterer.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
+import useAxiosPrivate from "../hooks/useAxiosPrivate.js";
 
 const Statistics = () => {
   const { lang } = useLanguage();
+  const axiosPrivate = useAxiosPrivate();
   const { isAuthenticated } = useAuth();
   const colorOfCategory = {
     "Food & Dining": "#264653",
@@ -56,16 +57,12 @@ const Statistics = () => {
   useEffect(() => {
     // get all expenses
     const getAllExpenses = async () => {
-      const token = localStorage.getItem("access_token");
 
       // submit GET request with token
       try {
-        const response = await axios.get(
-          "http://localhost:8000/expenses/",
+        const response = await axiosPrivate.get(
+          "/expenses/",
           {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },
             params: {
               start_date: dateRangeFilter.startDate ?? null,
               end_date: dateRangeFilter.endDate ?? null
@@ -73,6 +70,15 @@ const Statistics = () => {
           }
         );
 
+        /* test call
+        // TODO: delete
+        const response2 = await axiosPrivate.get(
+          "/auth/check_refresh_token"
+        );
+
+        console.log(response2.data);
+         */
+        
         // avoid setting expensesList if date filter is applied
         // to avoid rendering the area chart with data filtered by date
         if (!dateRangeFilter.startDate && !dateRangeFilter.endDate)
@@ -91,17 +97,11 @@ const Statistics = () => {
 
   useEffect(() => {
     const getCategoryTotals = async () => {
-      const token = localStorage.getItem("access_token");
 
       // submit GET request with token
       try {
-        const response = await axios.get(
-          "http://localhost:8000/expenses/category-summary",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
+        const response = await axiosPrivate.get(
+          "/expenses/category-summary"
         );
 
         setCategoryTotals((prevTotals) =>
@@ -158,16 +158,12 @@ const Statistics = () => {
   useEffect(() => {
     // expense pagination
     const getExpensesWithPagination = async () => {
-      const token = localStorage.getItem("access_token");
 
       // submit GET request with token
       try {
-        const response = await axios.get(
-          "http://localhost:8000/expenses/",
+        const response = await axiosPrivate.get(
+          "/expenses/",
           {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },
             params: {
               limit: expensesPerPage,
               offset: (pageNumber - 1) * expensesPerPage,
@@ -184,6 +180,7 @@ const Statistics = () => {
         //   setTotalExpenses(response.data.expenses.length)
 
       } catch (error) {
+        // TODO: handle other errors, most likely Network Error
         toast.error("Error occurred: " + error.message);
       }
     }

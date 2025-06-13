@@ -7,13 +7,13 @@ import {
 } from "react-icons/fa";
 
 import "../styles/dashboard.css";
-import axios from "axios";
 import { useLanguage } from "../context/LanguageContext.jsx";
 import toast from "react-hot-toast";
+import useAxiosPrivate from "../hooks/useAxiosPrivate.js";
 
 const Dashboard = () => {
   const { lang } = useLanguage();
-
+  const axiosPrivate = useAxiosPrivate();
   const [summary, setSummary] = useState(null);
   const [userRecentExpenses, setUserRecentExpenses] = useState(null);
 
@@ -22,17 +22,11 @@ const Dashboard = () => {
   // get summary
   useEffect( () => {
     const getSummary = async () => {
-      const token = localStorage.getItem("access_token");
 
       // submit request with token
       try {
-        const response = await axios.get(
-          "http://localhost:8000/expenses/total-summary",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
+        const response = await axiosPrivate.get(
+          "/expenses/total-summary"
         );
 
         setSummary(response.data);
@@ -49,16 +43,12 @@ const Dashboard = () => {
   useEffect(() => {
     const getRecentExpenses = async () => {
       const limit = 5;
-      const token = localStorage.getItem("access_token");
 
       // submit request with token
       try {
-        const response = await axios.get(
-          `http://localhost:8000/expenses/`,
+        const response = await axiosPrivate.get(
+          `/expenses/`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
             params: {
               limit: limit
             }

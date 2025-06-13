@@ -9,11 +9,11 @@ import {
   Legend,
   ResponsiveContainer
 } from "recharts";
-import axios from "axios";
 import toast from "react-hot-toast";
+import useAxiosPrivate from "../hooks/useAxiosPrivate.js";
 
 const AdminDashboard = () => {
-
+  const axiosPrivate = useAxiosPrivate();
   const [stats, setStats] = useState(null);
   const fakeData = {
     "receiptsScanned": 14,
@@ -29,16 +29,10 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("access_token");
 
       try {
-        const response = await axios.get(
-          "http://localhost:8000/admin/stats",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
+        const response = await axiosPrivate.get(
+          "/admin/stats"
         );
 
         setStats(response.data);

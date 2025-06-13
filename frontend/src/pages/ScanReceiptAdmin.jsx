@@ -3,7 +3,6 @@ import { useLanguage } from "../context/LanguageContext.jsx";
 import React, { useState } from "react";
 import ScaleLoader from "react-spinners/ScaleLoader.js";
 import toast from "react-hot-toast";
-import axios from "axios";
 import ExampleImage from "../components/ExampleImage.jsx";
 import "../styles/ScanReceiptAdmin.css";
 import JSONCodeBlock from "../components/JSONCodeBlock.jsx";
@@ -14,10 +13,12 @@ import bon4 from "../assets/images/example_receipts/bon4.png";
 import bonOther from "../assets/images/example_receipts/bon_other.jpeg";
 import bon_1 from "../assets/images/example_receipts/bon11.jpg";
 import bonYumm from "../assets/images/example_receipts/bon_yumm.jpeg";
+import useAxiosPrivate from "../hooks/useAxiosPrivate.js";
 
 
 const ScanReceiptAdmin = () => {
   const { lang } = useLanguage();
+  const axiosPrivate = useAxiosPrivate();
   const [imageUploaded, setImageUploaded] = useState(false);
   const [imageSubmitted, setImageSubmitted] = useState(false);
   const [image, setImage] = useState(null);
@@ -94,8 +95,8 @@ const ScanReceiptAdmin = () => {
     formData.append("file", image);
 
     try {
-      const response = await axios.post(
-        "http://localhost:8000/receipt/upload",
+      const response = await axiosPrivate.post(
+        "/receipt/upload",
         formData,
         {
           headers: {
@@ -105,11 +106,13 @@ const ScanReceiptAdmin = () => {
       );
 
       if (response.status !== 200) {
+        // TODO: handle other errors, most likely Network Error
         toast.error("Error occured: " + error.message);
       } else {
         parseResponse(response.data);
       }
     } catch (error) {
+      // TODO: handle other errors, most likely Network Error
       toast.error("Error while uploading file: " + error.message);
     } finally {
       setIsLoading(false);

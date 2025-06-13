@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import MainLayout from "../layouts/MainLayout";
-import axios from "axios";
 import "../styles/AddExpense.css";
 import { useLanguage } from "../context/LanguageContext";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import toast from "react-hot-toast";
+import useAxiosPrivate from "../hooks/useAxiosPrivate.js";
 
 const AddExpense = () => {
   const { lang } = useLanguage();
+  const axiosPrivate = useAxiosPrivate();
   const [tab, setTab] = useState("manual");
   const [image, setImage] = useState(null);
   const [previewURL, setPreviewURL] = useState(null);
@@ -32,18 +33,11 @@ const AddExpense = () => {
   const handleExpenseSubmit = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("access_token");
-
     // submit request with token and expense data
     try {
-      const response = await axios.post(
-        "http://localhost:8000/receipt/submit",
-        receiptData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
+      const response = await axiosPrivate.post(
+        "/receipt/submit",
+        receiptData
       );
 
       if (response.status === 200) {
@@ -85,22 +79,24 @@ const AddExpense = () => {
     formData.append("file", image);
 
     try {
-      const response = await axios.post(
-        "http://localhost:8000/receipt/upload",
+      const response = await axiosPrivate.post(
+        "/receipt/upload",
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        },
+        }
       );
 
       if (response.data.status_code !== 200) {
+        // TODO: handle other errors, most likely Network Error
         toast.error("Error occured: " + error.message);
       } else {
         parseResponse(response.data);
       }
     } catch (error) {
+      // TODO: handle other errors, most likely Network Error
       toast.error("Error while uploading file: " + error.message);
     } finally {
       setIsLoading(false);

@@ -3,7 +3,7 @@ import "../styles/Auth.css";
 import MainLayout from "../layouts/MainLayout";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
-import axios from "axios";
+import axios from "../api/axios";
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from "../context/AuthContext";
 
@@ -31,7 +31,7 @@ const Auth = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/auth/token",
+        "/auth/token",
         formData,
         {
           headers: {
@@ -41,12 +41,11 @@ const Auth = () => {
       );
 
       const access_token = response.data.access_token;
-      localStorage.setItem("access_token", access_token);
-
-      setError("");
-
       // update the auth context
-      auth.login();
+      auth.login(access_token);
+
+      // clear error
+      setError("");
 
       if (jwtDecode(access_token).role === "admin") {
         navigate("/admin_dashboard");
@@ -58,6 +57,7 @@ const Auth = () => {
       if (error.response && error.response.status === 401) {
         setError(lang.auth.errorInvalid);
       } else {
+        // TODO: handle other errors, most likely Network Error
         setError(error.message);
       }
     }
@@ -75,7 +75,7 @@ const Auth = () => {
     // submit to server
     try {
       const response = await axios.post(
-        "http://localhost:8000/auth/register",
+        "/auth/register",
         {
           email: form.email,
           password: form.password
@@ -83,20 +83,23 @@ const Auth = () => {
       );
 
       const access_token = response.data.access_token;
-      localStorage.setItem("access_token", access_token);
+      // update the auth context
+      auth.login(access_token);
 
+      // clear error
       setError("");
 
-      // update the auth context
-      auth.login();
+      if (jwtDecode(access_token).role === "admin") {
+        navigate("/admin_dashboard");
+      } else {
+        navigate("/dashboard");
+      }
 
-      navigate("/dashboard");
     } catch (error) {
       if (error.response && error.response.status === 400) {
         setError(lang.auth.errorExists);
       } else {
-        // TODO: Need to have specific text based on error
-        //  and not just error.message
+        // TODO: handle other errors, most likely Network Error
         setError(error.message);
       }
     }
