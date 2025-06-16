@@ -1,9 +1,11 @@
+@import "tailwindcss";
+
 /* custom font face(s) */
 /* regular (non-italic) variable font face */
 @font-face {
     font-family: "Inter";
     font-style: normal;
-    src: url("../../public/fonts/Inter/InterVariable.woff2") format("woff2");
+    src: url("../fonts/Inter/InterVariable.woff2") format("woff2");
 
     /* range of weights, i used this cool tool: https://wakamaifondue.com */
     font-weight: 100 900;
@@ -16,7 +18,7 @@
 @font-face {
     font-family: "Inter";
     font-style: italic;
-    src: url("../../public/fonts/Inter/InterVariable-Italic.woff2") format("woff2");
+    src: url("../fonts/Inter/InterVariable-Italic.woff2") format("woff2");
 
     /* range of weights, i used this cool tool: https://wakamaifondue.com */
     font-weight: 100 900;
@@ -25,24 +27,65 @@
     font-display: swap;
 }
 
+/* tailwind custom variables */
+@theme {
+    /* font families */
+    --font-sans: "Inter", "Segoe UI", sans-serif;
+
+    /* default background and text color */
+    --color-background: #f8f9fa;
+    --color-text: #333;
+
+    /* color palette */
+    --color-primary: #0B64F4; /* 500 */
+    /* lighter shades for primary color */
+    --color-primary-400: #3B82F6;
+    --color-primary-300: #5492F7;
+    --color-primary-200: #85B1F9;
+    --color-primary-100: #B6D0FC;
+    --color-primary-50: #E7EFFE;
+    /* darker shades for primary color */
+    --color-primary-600: #0A5ADB;
+    --color-primary-700: #0846AB;
+    --color-primary-800: #06327A;
+    --color-primary-900: #031E49;
+    --color-primary-950: #021431;
+
+    /* additional colors */
+    --color-danger: #C00F0C;
+    --color-success: #009951;
+    --color-warning: #E5A000;
+    --color-info: #004DB3;
+    --color-info-light: #0088E8;
+
+    /* border radius */
+    --radius-none: 0;
+    --radius-sm: 0.125rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --radius-3xl: 1.5rem;
+    --radius-full: 9999px; /* circle */
+}
+
 a {
   font-weight: 500;
-  color: #2563eb;
   text-decoration: none;
 }
 
 a:hover {
-  color: #1a4dc4;
+  color: var(--color-primary-700);
 }
 
 button {
-  border-radius: 6px;
+  border-radius: var(--radius-md);
   border: 1px solid transparent;
   padding: 0.5em 1em;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: var(--font-weight-normal);
   font-family: inherit;
-  background-color: #2563eb;
+  background-color: var(--color-primary);
   color: white;
   cursor: pointer;
   transition: background-color 0.2s ease;
