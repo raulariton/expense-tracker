@@ -40,11 +40,8 @@ const Auth = () => {
         },
       );
 
-      console.log(response.data);
-
       const access_token = response.data.access_token;
       const user_info = response.data.user_data;
-      console.log(user_info);
 
       localStorage.setItem("access_token", access_token);
       //user_info is an object
