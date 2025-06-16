@@ -7,15 +7,13 @@ import Statistics from "../pages/Statistics";
 import Home from "../pages/Home";
 import Settings from "../pages/Settings";
 import AdminDashboard from "../pages/DashboardAdmin";
-import CreateAdmin from "../pages/CreateAdmin.jsx";
+import AdminManagement from "../pages/AdminManagement.jsx";
 import { useAuth } from "../context/AuthContext";
 import ScanReceiptAdmin from "../pages/ScanReceiptAdmin.jsx";
 
 const AppRoutes = () => {
   const auth = useAuth();
   const isAdmin = auth.userRole === "Admin";
-
-  console.log(auth.userRole)
 
   return (
     <Routes>
@@ -37,8 +35,8 @@ const AppRoutes = () => {
         element={auth.isAuthenticated && isAdmin ? <AdminDashboard /> : <Navigate to="/auth" />}
       />
       <Route
-        path="/create-admin"
-        element={auth.isAuthenticated && isAdmin ? <CreateAdmin /> : <Navigate to="/auth" />}
+        path="/admin-management"
+        element={auth.isAuthenticated && isAdmin ? <AdminManagement /> : <Navigate to="/auth" />}
       />
       <Route
         path="/admin-scan-receipt"

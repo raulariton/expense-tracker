@@ -66,9 +66,9 @@ const Navbar = () => {
                 Dashboard
               </NavLink>
               <NavLink
-                to="/create-admin"
+                to="/admin-management"
               >
-                Create Admin
+                Admin Management
               </NavLink>
               <NavLink
                 to="/admin-scan-receipt"
@@ -145,6 +145,7 @@ const Navbar = () => {
           ) : (
             <>
             <NavLink to="/admin_dashboard">Dashboard</NavLink>
+            <NavLink to="/admin-management">Admin Management</NavLink>
             <NavLink to="/create-admin">Create Admin</NavLink>
             </>
           )}
