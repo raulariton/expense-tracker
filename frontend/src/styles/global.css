@@ -4,7 +4,7 @@ body {
     box-sizing: border-box;
     font-family: 'Inter', 'Segoe UI', sans-serif;
     background-color: #f8f9fa;
-    color: #333;
+    color: var(--color-gray-950);
     overflow-x: hidden;
 
 }

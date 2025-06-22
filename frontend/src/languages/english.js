@@ -1,10 +1,10 @@
 export default {
-  expense_categories: {
-    food_and_dining: "Food & Dining",
-    shopping: "Shopping",
-    transport: "Transport",
-    bills: "Bills",
-    other: "Other"
+  expenseCategories: {
+    "Food & Dining": "Food & Dining",
+    "Shopping": "Shopping",
+    "Transport": "Transport",
+    "Bills": "Bills",
+    "Other": "Other"
   },
   navbar: {
     dashboard: "Dashboard",
@@ -14,7 +14,9 @@ export default {
     settings: "Settings",
     logout: "Logout",
     login: "Login",
-    language: "Language"
+    language: "Language",
+    adminManagement: "Admin Management",
+    scanReceipt: "Scan Receipt",
   },
   dashboard: {
     totalSpent: "Spent This Month",
@@ -90,5 +92,18 @@ export default {
     button: "Create Admin",
     response: "Status: ",
     adminList: "Admin List"
-  }
+  },
+  adminDashboardTileDescriptions: {
+    usersRegistered: "Users registered",
+    totalAmountExpensesLogged: "worth of expenses logged",
+    totalExpensesLogged: "Expenses logged",
+    receiptsScanned: "Receipts scanned",
+    ocrAccuracy: "Receipt scanning accuracy",
+  },
+  adminDashboard: {
+    expenseCountByCategory: "Expenses count by category",
+    expenseAmountByCategory: "Expenses amount by category",
+    legend: "Legend",
+    entries: "entries",
+  },
 };

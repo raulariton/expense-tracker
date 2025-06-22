@@ -1,10 +1,10 @@
 export default {
-    expense_categories: {
-      food_and_dining: "Mâncare & Restaurant",
-      shopping: "Shopping",
-      transport: "Transport",
-      bills: "Facturi",
-      other: "Altele"
+    expenseCategories: {
+      "Food & Dining": "Mâncare & Restaurant",
+      "Shopping": "Shopping",
+      "Transport": "Transport",
+      "Bills": "Facturi",
+      "Other": "Altele"
     },
     navbar: {
       dashboard: "Dashboard",
@@ -14,7 +14,9 @@ export default {
       settings: "Setări",
       logout: "Deconectare",
       login: "Conectare",
-      language: "Limbă"
+      language: "Limbă",
+      adminManagement: "Administrare Admini",
+      scanReceipt: "Scanare Bon",
     },
     dashboard: {
       totalSpent: "Cheltuielile lunii",
@@ -90,6 +92,18 @@ export default {
     button: "Creează Admin",
     response: "Status: ",
     adminList: "Lista Adminilor"
+  },
+  adminDashboardTileDescriptions: {
+    usersRegistered: "Utilizatori înregistrați",
+    totalAmountExpensesLogged: "valoarea cheltuielilor înregistrate",
+    totalExpensesLogged: "Cheltuieli înregistrate",
+    receiptsScanned: "Bonuri scanate",
+    ocrAccuracy: "Precizie scanare bonuri",
+  },
+  adminDashboard: {
+    expenseCountByCategory: "Număr de cheltuieli pe categorii",
+    expenseAmountByCategory: "Suma cheltuielilor pe categorii",
+    legend: "Legendă",
+    entries: "înregistrări (cheltuieli)",
   }
 };
-  
