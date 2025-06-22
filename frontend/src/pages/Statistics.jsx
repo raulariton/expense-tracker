@@ -201,21 +201,6 @@ const Statistics = () => {
     );
   }
 
-  const displayCategoryNameUsingLocale = (category) => {
-    switch (category) {
-      case "Food & Dining":
-        return lang.expense_categories.food_and_dining;
-      case "Shopping":
-        return lang.expense_categories.shopping;
-      case "Transport":
-        return lang.expense_categories.transport;
-      case "Bills":
-        return lang.expense_categories.bills;
-      default:
-        return lang.expense_categories.other;
-    }
-  }
-
   const handleDateFilterApply = (dateRange) => {
     setDateRangeFilter({
       startDate: dateRange.startDate,
@@ -226,9 +211,9 @@ const Statistics = () => {
     setPageNumber(1);
   }
 
-  const localizedCategoryTotals = categoryTotals.map(category => ({
-    ...category,
-    category: displayCategoryNameUsingLocale(category.category)
+  const localizedCategoryTotals = categoryTotals.map(item => ({
+    ...item,
+    category: lang.expenseCategories[item.category]
   }))
 
     return (

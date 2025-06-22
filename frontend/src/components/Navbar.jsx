@@ -63,17 +63,17 @@ const Navbar = () => {
               <NavLink
                 to="/admin_dashboard"
               >
-                Dashboard
+                {lang.navbar.dashboard}
               </NavLink>
               <NavLink
                 to="/admin-management"
               >
-                Admin Management
+                {lang.navbar.adminManagement}
               </NavLink>
               <NavLink
                 to="/admin-scan-receipt"
               >
-                Scan Receipt
+                {lang.navbar.scanReceipt}
               </NavLink>
           </>
         )
@@ -144,9 +144,9 @@ const Navbar = () => {
             </>
           ) : (
             <>
-            <NavLink to="/admin_dashboard">Dashboard</NavLink>
-            <NavLink to="/admin-management">Admin Management</NavLink>
-            <NavLink to="/create-admin">Create Admin</NavLink>
+            <NavLink to="/admin_dashboard">{lang.navbar.dashboard}</NavLink>
+            <NavLink to="/admin-management">{lang.navbar.adminManagement}</NavLink>
+            <NavLink to="/admin-scan-receipt">{lang.navbar.scanReceipt}</NavLink>
             </>
           )}
           <hr className="divider" />

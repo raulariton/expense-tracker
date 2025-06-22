@@ -152,11 +152,9 @@ const AddExpense = () => {
                   setReceiptData({ ...receiptData, category: e.target.value })
                 }
               >
-                <option>{lang.expense_categories.food_and_dining}</option>
-                <option>{lang.expense_categories.transport}</option>
-                <option>{lang.expense_categories.shopping}</option>
-                <option>{lang.expense_categories.bills}</option>
-                <option>{lang.expense_categories.other}</option>
+                {Object.entries(lang.expenseCategories).map(([key, value]) => (
+                  <option key={key}>{value}</option>
+                ))}
               </select>
             </label>
 
@@ -292,11 +290,11 @@ const AddExpense = () => {
                             })
                           }
                         >
-                          <option>{lang.expense_categories.food_and_dining}</option>
-                          <option>{lang.expense_categories.transport}</option>
-                          <option>{lang.expense_categories.shopping}</option>
-                          <option>{lang.expense_categories.bills}</option>
-                          <option>{lang.expense_categories.other}</option>
+                          {Object.entries(lang.expenseCategories).map(
+                            ([key, value]) => (
+                              <option key={key}>{value}</option>
+                            ),
+                          )}
                         </select>
                       </label>
 
