@@ -106,4 +106,38 @@ export default {
     legend: "Legend",
     entries: "entries",
   },
+  adminManagement: {
+    header: "Admin Management",
+    description: "View, create and manage administrators for the application.",
+    searchPlaceholder: "Search for an admin",
+    createAdmin: "Create New Admin",
+    sortOptions: {
+      emailAsc: "Email (A-Z)",
+      emailDesc: "Email (Z-A)",
+      dateAsc: "Date Created (Oldest First)",
+      dateDesc: "Date Created (Newest First)",
+      default: "Default (no sorting)"
+    },
+    noAdministratorsFound: "No administrators found.",
+    adminCreationForm: {
+      header: "Create New Admin",
+      instructions: "Enter the email address of the new administrator you want to create. They will receive an email with their password to log in.",
+      emailLabel: "Email",
+      emailPlaceholder: "john.doe@gmail.com",
+      emailError: "Admin already exists!",
+      createButton: "Create",
+      creatingButton: "Creating...",
+      successMessage: "Admin Created Successfully!",
+      successDescription: "An invitation email has been sent to the administrator.",
+      closeButton: "Close",
+    }
+  },
+  adminScanReceipt: {
+    header: "Scan Receipt",
+    description: "Test out the receipt scanning functionality. You can also use the provided example receipts proven to work well.",
+    resultsTabLabel: "Results",
+    JSONCodeTabLabel: "JSON Code",
+    exampleReceiptsHeader: "Example Receipts",
+
+  }
 };

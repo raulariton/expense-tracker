@@ -57,7 +57,8 @@ async def get_stats(
     # total number of expenses, by all users, grouped by category
     expenses_count_grouped_by_category = db.query(
         Expense.category,
-        func.count(Expense.id).label("total")
+        func.count(Expense.id).label("total"),
+        (func.count(Expense.id) * 100.0 / func.sum(func.count(Expense.id)).over()).label("percentage")
     ).group_by(Expense.category).all()
 
     # total amount ($) of expenses, by all users
@@ -67,7 +68,8 @@ async def get_stats(
     # total amount ($) of expenses, by all users, grouped by category
     expenses_amount_grouped_by_category = db.query(
         Expense.category,
-        func.sum(Expense.amount).label("total_amount")
+        func.sum(Expense.amount).label("total_amount"),
+        (func.count(Expense.id) * 100.0 / func.sum(func.count(Expense.id)).over()).label("percentage")
     ).group_by(Expense.category).all()
 
     # total number of users (including admins)
@@ -77,17 +79,19 @@ async def get_stats(
         "expenses_count_grouped_by_category": [
             {
                 "category": category,
-                "total": total
+                "total": total,
+                "percentage": round(percentage, 2) if percentage else 0
             }
-            for category, total, in expenses_count_grouped_by_category
+            for category, total, percentage in expenses_count_grouped_by_category
         ],
 
         "expenses_amount_grouped_by_category": [
             {
                 "category": category,
-                "total": round(total, 2) if total else 0
+                "total": round(total, 2) if total else 0,
+                "percentage": round(percentage, 2) if percentage else 0
             }
-            for category, total, in expenses_amount_grouped_by_category
+            for category, total, percentage in expenses_amount_grouped_by_category
         ],
 
         "expenses_count" : expenses_count,
@@ -141,26 +145,37 @@ async def create_admin(
 @router.get("/admin_table")
 async def get_admins(
         db: db_dependency,
+        sort_by: str = None,
+        search_query: str = None,
         admin_logged_in: dict = Depends(get_current_admin)
 ):
-
-
-    result = db.query(
+    query = db.query(
         User.id,
         User.email,
         UserInfo.creation_date,
-        UserInfo.username
-    ).join(UserInfo,
-        User.id == UserInfo.id_user
-    ).filter(User.role_id == 2).all()
+        UserInfo.username).join(UserInfo, User.id == UserInfo.id_user).filter(User.role_id == 2)
 
+    if search_query:
+        search_query = f"%{search_query}%"
+        # case-insensitive search for email and username
+        query = query.filter(User.email.ilike(search_query) | UserInfo.username.ilike(search_query))
 
+    if sort_by:
+        if sort_by == "email-asc":
+            query = query.order_by(User.email.asc())
+        elif sort_by == "email-desc":
+            query = query.order_by(User.email.desc())
+        elif sort_by == "newest":
+            query = query.order_by(UserInfo.creation_date.desc())
+        elif sort_by == "oldest":
+            query = query.order_by(UserInfo.creation_date.asc())
 
+    result = query.all()
 
     admins = [{"id": admin_id,
                "email": email,
-               "creation_date":creation_date,
-               "username":username
+               "creation_date": creation_date,
+               "username": username
 
                } for admin_id, email, creation_date, username in result]
 

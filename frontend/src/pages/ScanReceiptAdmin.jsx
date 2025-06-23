@@ -128,7 +128,12 @@ const ScanReceiptAdmin = () => {
   return (
     <MainLayout>
       <div className="add-expense-container">
-        <h1>Scan Receipt</h1>
+        <div className="flex flex-col">
+          <h1 className="mb-2 text-2xl font-semibold">{lang.adminScanReceipt.header}</h1>
+          <span>
+            <p>{lang.adminScanReceipt.description}</p>
+          </span>
+        </div>
 
         <div className="scan-row">
           <div className="upload-area-and-results">
@@ -180,7 +185,6 @@ const ScanReceiptAdmin = () => {
 
             {imageSubmitted && image && (
               <div className="ocr-results-container">
-                {/* TODO: JSON tab */}
                 {isLoading ? (
                   <div className="loader">
                     <ScaleLoader
@@ -264,7 +268,7 @@ const ScanReceiptAdmin = () => {
 
           {/* Example images */}
           <div className="example-images-section">
-            <h2>Example Receipts</h2>
+            <h2>{lang.adminScanReceipt.exampleReceiptsHeader}</h2>
             <div className="example-images-container">
               {images.map((src, index) => (
                 <ExampleImage

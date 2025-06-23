@@ -6,6 +6,105 @@ import "../styles/CreateAdmin.css";
 import toast from "react-hot-toast";
 import { FaPlus, FaFilter } from "react-icons/fa";
 import AdminCreationModal from "../components/AdminCreationModal.jsx";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem
+} from "@/components/ui/dropdown-menu";
+import {
+  FaSortAlphaDown,
+  FaSortAlphaUp,
+  FaSortNumericDown,
+  FaSortNumericUp,
+  FaSort,
+  FaCheck
+} from "react-icons/fa";
+import { useDebounce } from "use-debounce";
+
+const SortOptionsDropdownMenu = ({ selectedSortingOption, setSelectedSortingOption }) => {
+  const { lang } = useLanguage();
+  const sortOptions = [
+    {
+      value: "email-asc",
+      label: lang.adminManagement.sortOptions.emailAsc,
+      icon: <FaSortAlphaUp />
+    },
+    {
+      value: "email-desc",
+      label: lang.adminManagement.sortOptions.emailDesc,
+      icon: <FaSortAlphaDown />
+    },
+    {
+      value: "newest",
+      label: lang.adminManagement.sortOptions.dateDesc,
+      icon: <FaSortNumericUp />
+    },
+    {
+      value: "oldest",
+      label: lang.adminManagement.sortOptions.dateAsc,
+      icon: <FaSortNumericDown />
+    },
+    {
+      value: "default",
+      label: lang.adminManagement.sortOptions.default,
+      icon: null
+    }
+  ]
+
+  const onValueChange = (value) => {
+    setSelectedSortingOption({
+      value: value,
+      label: sortOptions.find(option => option.value === value).label
+    });
+  }
+
+  const SortOptionItem = ({ value, label, iconComponent }) => {
+    return (
+      <DropdownMenuRadioItem
+        value={value}
+        className={`flex items-center justify-between ${selectedSortingOption === value ? "bg-accent" : ""}`}>
+            <div className="flex items-center gap-2">
+              {iconComponent}
+              {label}
+            </div>
+            {selectedSortingOption === value && (
+              <FaCheck/>
+            )}
+          </DropdownMenuRadioItem>
+    )
+  }
+
+  return (
+    <DropdownMenuContent className="w-68" align="start">
+        <DropdownMenuRadioGroup value={selectedSortingOption} onValueChange={onValueChange}>
+          {sortOptions.slice(0, 2).map(option => (
+            <SortOptionItem
+              key={option.value}
+              value={option.value}
+              label={option.label}
+              iconComponent={option.icon} />
+          ))}
+          <DropdownMenuSeparator/>
+          {sortOptions.slice(2, 4).map(option => (
+            <SortOptionItem
+              key={option.value}
+              value={option.value}
+              label={option.label}
+              iconComponent={option.icon} />
+          ))}
+          <DropdownMenuSeparator />
+            <SortOptionItem
+              key={sortOptions[4].value}
+              value={sortOptions[4].value}
+              label={sortOptions[4].label}
+              iconComponent={sortOptions[4].icon} />
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+  )
+}
 
 const AdminManagement = () => {
   const { lang, currentLangCode } = useLanguage();
@@ -17,19 +116,43 @@ const AdminManagement = () => {
     adminExistsError: false,
     modalOpen: false
   });
+  const [selectedSortingOption, setSelectedSortingOption] = useState({
+    value: "default",
+    label: lang.adminManagement.sortOptions.default,
+  });
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery] = useDebounce(searchQuery, 500);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    // fetch admins using search query
+    fetchAdmins({ abortController: controller });
+
+    // cleanup function to abort the request if the component unmounts or if the search query changes
+    return () => {
+      controller.abort();
+    }
+  }, [debouncedQuery]);
 
   // set to true display fake statuses for admins
   const fakeData = false;
 
   // defined outside of useEffect to call after admin creation
-  const fetchAdmins = async () => {
+  const fetchAdmins = async ( abortController ) => {
     const token = localStorage.getItem("access_token");
 
     try {
       const response = await axios.get("http://localhost:8000/admin/admin_table", {
         headers: {
           Authorization: `Bearer ${token}`
-        }
+        },
+        params: {
+          sort_by: selectedSortingOption.value,
+          search_query: searchQuery
+        },
+        signal: abortController?.signal || null // pass the abort signal if available
       });
 
       // TESTING PURPOSES: add status attribute to each admin
@@ -45,12 +168,21 @@ const AdminManagement = () => {
       }
 
     } catch (error) {
-      toast.error("Error occurred: " + error.message);
+      if (axios.isCancel(error)) {
+        toast.error("Fetch cancelled");
+      } else {
+        toast.error("Error occurred: " + error.message);
+      }
     }
   };
 
   useEffect(() => {
     // fetch admin users
+    fetchAdmins();
+  }, [selectedSortingOption]);
+
+  useEffect(() => {
+    // fetch admins on initial render
     fetchAdmins();
   }, []);
 
@@ -238,24 +370,38 @@ const AdminManagement = () => {
   // TODO: take into account user languages
   return (
     <MainLayout>
+      {/* header: page title and description */}
       <div className="flex flex-col">
         <h1 className="text-2xl font-semibold mb-2">
-          Admin management
+          {lang.adminManagement.header}
         </h1>
         <p>
-          View, create and manage administrators for the application.
+          {lang.adminManagement.description}
         </p>
       </div>
 
       {/* search bar, filtering and add admin button*/}
       <div className="flex flex-row justify-between items-center mt-4">
         <div className="flex flex-row items-stretch gap-2">
-          <input type="text" placeholder="Search for an administrator..."
-                 className="w-full pl-2 pr-5 border border-gray-300 rounded-md bg-white focus:outline-1.75 focus:outline-gray-500" />
-          <button
-            className="bg-primary text-white rounded-md hover:bg-blue-600 transition-colors duration-200 px-4 py-2 gap-2 flex items-center shadow-md justify-center min-h-10">
-            <FaFilter className="inline" /> Filter
-          </button>
+          <input
+            type="text"
+            placeholder={lang.adminManagement.searchPlaceholder}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-2 pr-5 border border-gray-300 rounded-md bg-white focus:outline-1.75 focus:outline-gray-500" />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                className="bg-primary whitespace-nowrap text-white rounded-md hover:bg-blue-600 transition-colors duration-200 px-4 py-2 gap-2 flex items-center shadow-md justify-start min-h-10">
+                <FaSort className="inline" />
+                <span className="text-white text-sm">Sort by: {selectedSortingOption.label}</span>
+              </button>
+            </DropdownMenuTrigger>
+            <SortOptionsDropdownMenu
+              selectedSortingOption={selectedSortingOption}
+              setSelectedSortingOption={setSelectedSortingOption}
+            />
+          </DropdownMenu>
         </div>
 
         <div className="flex flex-row items-stretch gap-2">
@@ -264,7 +410,7 @@ const AdminManagement = () => {
             onClick={() => setAdminCreationRequest({ ...adminCreationRequest, modalOpen: true })}
           >
             <FaPlus className="text-base" />
-            <span className="font-medium hidden sm:inline">Create New Admin</span>
+            <span className="font-medium hidden md:inline">{lang.adminManagement.createAdmin}</span>
           </button>
         </div>
       </div>
@@ -278,11 +424,15 @@ const AdminManagement = () => {
       />
 
       <div
-        className="bg-white divide-y divide-gray-200 mt-4 shadow-md rounded-md p-4 max-h-[50vh] scroll-smooth overflow-y-auto">
-        {admins.map(
+        className="bg-white divide-y divide-gray-200 mt-4 shadow-md rounded-md p-4 max-h-[50vh] min-h-[50vh] scroll-smooth overflow-y-auto">
+        {admins.length > 0 ? admins.map(
           (admin) => (
             <AdminCard key={admin.id} adminInstance={admin} />
           )
+        ) : (
+          <div className="text-center items-center justify-center text-gray-500">
+            {lang.adminManagement.noAdministratorsFound}
+          </div>
         )}
       </div>
     </MainLayout>

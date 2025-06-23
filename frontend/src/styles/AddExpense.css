@@ -1,6 +1,5 @@
 .add-expense-container {
   background-color: #f8f9fb;
-  padding: 32px;
   display: flex;
   flex-direction: column;
   gap: 24px;

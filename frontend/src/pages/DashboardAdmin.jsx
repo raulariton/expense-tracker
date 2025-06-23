@@ -212,8 +212,6 @@ const AdminDashboard = () => {
           },
         });
 
-        console.log("Fetched stats:", response.data);
-
         setStats(response.data);
       } catch (error) {
         toast.error("Error occurred: " + error.message);
