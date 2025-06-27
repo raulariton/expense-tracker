@@ -109,8 +109,8 @@ async def get_expenses(
     db: db_dependency,
     limit: int = None,
     offset: int = None,
-    start_date: datetime.date = None,
-    end_date: datetime.date = None,
+    start_date: datetime.datetime = None,
+    end_date: datetime.datetime = None,
     current_user: dict = Depends(get_current_user)
 ):
     """
@@ -136,7 +136,11 @@ async def get_expenses(
              .filter(ExpenseTable.user_id == user_id)
              .order_by(ExpenseTable.date_time.desc()))
 
-    # TODO: add date filtering (before limit and offset)
+    # date filtering
+    if start_date:
+        query = query.filter(ExpenseTable.date_time >= start_date)
+    if end_date:
+        query = query.filter(ExpenseTable.date_time <= end_date)
 
     # check if limit is given
     if limit:

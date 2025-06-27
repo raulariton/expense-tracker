@@ -1,0 +1,88 @@
+.password-box {
+    margin-top: 1rem;
+    background: #f3f3f3;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.generated-password {
+    font-family: monospace;
+    font-size: 1.2rem;
+    color: #000000;
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+
+.admin_text_wrapper{
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+.admin-card {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    align-items: center;
+
+}
+
+.password-outside-box{
+    padding-top: 2.5rem;
+}
+
+.card.admin-table{
+    min-width: 500px;
+
+}
+.wrapper{
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+}
+
+
+
+.create-admin{
+    padding-top: 2rem;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: auto;
+    grid-auto-rows: auto;
+}
+
+.space{
+    padding: 5rem;
+}
+
+.admin-scroll-body {
+  max-height: 300px; /* scrollable height */
+  overflow-y: auto;
+  margin-top: 12px;
+  padding-right: 8px; /* spacing for scrollbar */
+}
+
+
+.admin-card-info{
+
+}
+
+.card{
+    background: white;
+    padding: 32px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    min-height: 300px; /* added to keep consistent height */
+    min-width: 500px; /* added to keep consistent height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+
+}

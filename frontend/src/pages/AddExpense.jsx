@@ -20,14 +20,6 @@ const AddExpense = () => {
     datetime: "",
   });
 
-  const categoryMap = {
-    "Food & Dining": 1,
-    Transport: 3,
-    Shopping: 2,
-    Bills: 4,
-    Other: 5,
-  };
-
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -160,11 +152,9 @@ const AddExpense = () => {
                   setReceiptData({ ...receiptData, category: e.target.value })
                 }
               >
-                <option>{lang.expense_categories.food_and_dining}</option>
-                <option>{lang.expense_categories.transport}</option>
-                <option>{lang.expense_categories.shopping}</option>
-                <option>{lang.expense_categories.bills}</option>
-                <option>{lang.expense_categories.other}</option>
+                {Object.entries(lang.expenseCategories).map(([key, value]) => (
+                  <option key={key}>{value}</option>
+                ))}
               </select>
             </label>
 
@@ -199,140 +189,153 @@ const AddExpense = () => {
 
         {tab === "scan" && (
           <div className="scan-row">
-            <div className="scan-section">
-              {!previewURL ? (
-                <label htmlFor="receipt-upload" className="upload-area">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    id="receipt-upload"
-                    onChange={handleImageUpload}
-                  />
-                  <div className="upload-content">
-                    <span>📁 {lang.addExpense.uploadReceipt}</span>
-                  </div>
-                </label>
-              ) : (
-                <>
-                  <div className="preview-container">
-                    <img
-                      src={previewURL}
-                      alt="Receipt Preview"
-                      className="receipt-preview"
+            <div className="upload-area-and-results">
+              <div className="scan-section">
+                {!previewURL ? (
+                  <label htmlFor="receipt-upload" className="upload-area">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      id="receipt-upload"
+                      onChange={handleImageUpload}
                     />
-                  </div>
-                  {!ocrSubmitted && (
-                    <button
-                      className="btn-submit-api"
-                      onClick={() => handleImageSubmit()}
-                    >
-                      {lang.addExpense.submitToApi}
-                    </button>
-                  )}
-                </>
-              )}
-            </div>
-
-            {/*{!previewURL && (*/}
-            {/*  <div className="or-text">*/}
-            {/*    <span>{lang.addExpense.or}</span>*/}
-            {/*  </div>*/}
-            {/*)}*/}
-            {/* TODO: uncomment and use for QR code scan feature (when implemented) */}
-            {/*{!previewURL && (*/}
-            {/*  <div className="qrcode-placeholder">*/}
-            {/*    <p>{lang.addExpense.qrcodePlaceholder}</p>*/}
-            {/*    <div className="qrcode-box">[ qrcode placeholder ]</div>*/}
-            {/*  </div>*/}
-            {/*)}*/}
-
-            {ocrSubmitted && previewURL && (
-              <div className="ocr-results-container">
-                {isLoading ? (
-                  <div className="loader">
-                    <ScaleLoader
-                      color="#2563eb"
-                      loading={isLoading}
-                      height="3rem"
-                      width="0.25rem"
-                    />
-                  </div>
+                    <div className="upload-content">
+                      <span>📁 {lang.addExpense.uploadReceipt}</span>
+                    </div>
+                  </label>
                 ) : (
-                  <div className="ocr-details">
-                    <h2>{lang.addExpense.previewTitle}</h2>
-                    <label>
-                      {lang.addExpense.amount}
-                      <input
-                        type="number"
-                        placeholder="0.00"
-                        step="0.10"
-                        value={receiptData.amount}
-                        onChange={(e) =>
-                          setReceiptData({
-                            ...receiptData,
-                            amount: e.target.value,
-                          })
-                        }
+                  <>
+                    <div className="preview-container">
+                      <img
+                        src={previewURL}
+                        alt="Receipt Preview"
+                        className="receipt-preview"
                       />
-                    </label>
-
-                    <label>
-                      {lang.addExpense.category}
-                      <select
-                        value={receiptData.category}
-                        onChange={(e) =>
-                          setReceiptData({
-                            ...receiptData,
-                            category: e.target.value,
-                          })
-                        }
+                      {!isLoading && (
+                        <button
+                          className="delete-image-btn"
+                          onClick={() => {
+                            setImage(null);
+                            setPreviewURL(null);
+                            setOcrSubmitted(false);
+                          }}
+                        >
+                          ✖
+                        </button>
+                      )}
+                    </div>
+                    {!ocrSubmitted && (
+                      <button
+                        className="btn-submit-api"
+                        onClick={() => handleImageSubmit()}
                       >
-                        <option>{lang.expense_categories.food_and_dining}</option>
-                        <option>{lang.expense_categories.transport}</option>
-                        <option>{lang.expense_categories.shopping}</option>
-                        <option>{lang.expense_categories.bills}</option>
-                        <option>{lang.expense_categories.other}</option>
-                      </select>
-                    </label>
-
-                    <label>
-                      {lang.addExpense.vendor}
-                      <input
-                        type="text"
-                        value={receiptData.vendor}
-                        onChange={(e) =>
-                          setReceiptData({
-                            ...receiptData,
-                            vendor: e.target.value,
-                          })
-                        }
-                      />
-                    </label>
-
-                    <label>
-                      {lang.addExpense.dateTime}
-                      <input
-                        type="datetime-local"
-                        value={receiptData.datetime}
-                        onChange={(e) =>
-                          setReceiptData({
-                            ...receiptData,
-                            datetime: e.target.value,
-                          })
-                        }
-                      />
-                    </label>
-
-                    <button
-                      className="btn-primary"
-                      onClick={handleExpenseSubmit}
-                    >
-                      {lang.addExpense.add}
-                    </button>
-                  </div>
+                        {lang.addExpense.submitToApi}
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
-            )}
+
+              {/*{!previewURL && (*/}
+              {/*  <div className="or-text">*/}
+              {/*    <span>{lang.addExpense.or}</span>*/}
+              {/*  </div>*/}
+              {/*)}*/}
+              {/* TODO: uncomment and use for QR code scan feature (when implemented) */}
+              {/*{!previewURL && (*/}
+              {/*  <div className="qrcode-placeholder">*/}
+              {/*    <p>{lang.addExpense.qrcodePlaceholder}</p>*/}
+              {/*    <div className="qrcode-box">[ qrcode placeholder ]</div>*/}
+              {/*  </div>*/}
+              {/*)}*/}
+
+              {ocrSubmitted && previewURL && (
+                <div className="ocr-results-container">
+                  {isLoading ? (
+                    <div className="loader">
+                      <ScaleLoader
+                        color="#2563eb"
+                        loading={isLoading}
+                        height="3rem"
+                        width="0.25rem"
+                      />
+                    </div>
+                  ) : (
+                    <div className="ocr-details">
+                      <h2>{lang.addExpense.previewTitle}</h2>
+                      <label>
+                        {lang.addExpense.amount}
+                        <input
+                          type="number"
+                          placeholder="0.00"
+                          step="0.10"
+                          value={receiptData.amount}
+                          onChange={(e) =>
+                            setReceiptData({
+                              ...receiptData,
+                              amount: e.target.value
+                            })
+                          }
+                        />
+                      </label>
+
+                      <label>
+                        {lang.addExpense.category}
+                        <select
+                          value={receiptData.category}
+                          onChange={(e) =>
+                            setReceiptData({
+                              ...receiptData,
+                              category: e.target.value
+                            })
+                          }
+                        >
+                          {Object.entries(lang.expenseCategories).map(
+                            ([key, value]) => (
+                              <option key={key}>{value}</option>
+                            ),
+                          )}
+                        </select>
+                      </label>
+
+                      <label>
+                        {lang.addExpense.vendor}
+                        <input
+                          type="text"
+                          value={receiptData.vendor}
+                          onChange={(e) =>
+                            setReceiptData({
+                              ...receiptData,
+                              vendor: e.target.value
+                            })
+                          }
+                        />
+                      </label>
+
+                      <label>
+                        {lang.addExpense.dateTime}
+                        <input
+                          type="datetime-local"
+                          value={receiptData.datetime}
+                          onChange={(e) =>
+                            setReceiptData({
+                              ...receiptData,
+                              datetime: e.target.value
+                            })
+                          }
+                        />
+                      </label>
+
+                      <button
+                        className="btn-primary"
+                        onClick={handleExpenseSubmit}
+                      >
+                        {lang.addExpense.add}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}</div>
           </div>
         )}
       </div>

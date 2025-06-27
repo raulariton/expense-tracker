@@ -1,10 +1,10 @@
 export default {
-    expense_categories: {
-      food_and_dining: "Mâncare & Restaurant",
-      shopping: "Shopping",
-      transport: "Transport",
-      bills: "Facturi",
-      other: "Altele"
+    expenseCategories: {
+      "Food & Dining": "Mâncare & Restaurant",
+      "Shopping": "Shopping",
+      "Transport": "Transport",
+      "Bills": "Facturi",
+      "Other": "Altele"
     },
     navbar: {
       dashboard: "Dashboard",
@@ -14,7 +14,9 @@ export default {
       settings: "Setări",
       logout: "Deconectare",
       login: "Conectare",
-      language: "Limbă"
+      language: "Limbă",
+      adminManagement: "Administrare Admini",
+      scanReceipt: "Scanare Bon",
     },
     dashboard: {
       totalSpent: "Cheltuielile lunii",
@@ -52,13 +54,15 @@ export default {
       title: "Setări cont",
       viewTitle: "Informații cont",
       name: "Prenume",
-      lastName: "Nume",
+      username: "Nume Utilizator",
       email: "Email",
       password: "Parolă",
       created: "Cont creat",
       edit: "Editează profilul",
       cancel: "Anulează",
       save: "Salvează",
+      role: "Rol",
+      userExists: "Nume deja folosit"
     },
     auth: {
       loginTab: "Conectare",
@@ -81,11 +85,58 @@ export default {
       title: "Bine ai venit la ExpenseTracker",
       description: "Ține cont de cheltuielile tale, încarcă bonurile fiscale și primește perspective despre cheltuielile tale. Totul într-o interfață modernă și simplă.",
       ShomeTitle: "...",
-     
-    }
-    
-    
-    
-    
-  };
-  
+
+    },
+  admin: {
+    title: "Creează Admin nou",
+    button: "Creează Admin",
+    response: "Status: ",
+    adminList: "Lista Adminilor"
+  },
+  adminDashboardTileDescriptions: {
+    usersRegistered: "Utilizatori înregistrați",
+    totalAmountExpensesLogged: "valoarea cheltuielilor înregistrate",
+    totalExpensesLogged: "Cheltuieli înregistrate",
+    receiptsScanned: "Bonuri scanate",
+    ocrAccuracy: "Precizie scanare bonuri",
+  },
+  adminDashboard: {
+    expenseCountByCategory: "Număr de cheltuieli pe categorii",
+    expenseAmountByCategory: "Suma cheltuielilor pe categorii",
+    legend: "Legendă",
+    entries: "înregistrări (cheltuieli)",
+  },
+  adminManagement: {
+    header: "Administrare Admini",
+    description: "Vizualizați, creați și administrați administratorii aplicației.",
+    searchPlaceholder: "Caută un admin",
+    createAdmin: "Creare Admin Nou",
+    sortOptions: {
+      emailAsc: "Email (A-Z)",
+      emailDesc: "Email (Z-A)",
+      dateAsc: "Dată Creare (Cele mai vechi întâi)",
+      dateDesc: "Dată Creare (Cele mai noi întâi)",
+      default: "Implicit (fără sortare)"
+    },
+    noAdministratorsFound: "Nu s-au găsit administratori.",
+    adminCreationForm: {
+      header: "Creare Admin Nou",
+      instructions: "Introduceți email-uli administratorului nou care doriți să creați. El va primi un email cu o parolă pentru logarea în cont.",
+      emailLabel: "Email",
+      emailPlaceholder: "ana.popescu@gmail.com",
+      emailError: "Administratorul există deja!",
+      createButton: "Creează",
+      creatingButton: "Se creează...",
+      successMessage: "Administrator creat cu succes!",
+      successDescription: "S-a trimis un email de invitație spre administrator.",
+      closeButton: "Închide",
+    },
+  },
+  adminScanReceipt: {
+    header: "Scanare Bon",
+    description: "Testați functionalitatea de scanare a bonurilor fiscale. Puteți folosi imaginile exemplare date mai jos, ele fiind cazuri ideale.",
+    resultsTabLabel: "Rezultate",
+    JSONCodeTabLabel: "Cod JSON",
+    exampleReceiptsHeader: "Bonuri Exemplare",
+  }
+};

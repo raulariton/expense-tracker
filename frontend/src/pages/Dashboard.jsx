@@ -1,10 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
 import SummaryCard from "../components/SummaryCard";
-import CategoryCard from "../components/CategoryCard";
 import ActivityItem from "../components/ActivityItem";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../App.jsx";
 import {
   FaCalendarAlt,
 } from "react-icons/fa";
@@ -17,21 +14,10 @@ import toast from "react-hot-toast";
 const Dashboard = () => {
   const { lang } = useLanguage();
 
-  const { isAuthenticated } = useContext(AuthContext);
   const [summary, setSummary] = useState(null);
   const [userRecentExpenses, setUserRecentExpenses] = useState(null);
 
-  if (!isAuthenticated) {
-    // TODO: Redirect to login page, and then back to dashboard
-    //  (proper handling)
-    return (
-      <MainLayout>
-        <div className="dashboard">
-          <p>Please log in to view your dashboard.</p>
-        </div>
-      </MainLayout>
-    );
-  }
+  // TODO: one useEffect for all requests
 
   // get summary
   useEffect( () => {
@@ -95,19 +81,19 @@ const Dashboard = () => {
         <div className="summary-cards">
           <SummaryCard
             title={lang.dashboard.totalSpent}
-            amount={`$${(summary?.total_month || 0).toFixed(2)}`}
+            amount={`${(summary?.total_month || 0).toFixed(2)} RON`}
             subtitle={lang.dashboard.subtitleMonth}
             icon={<FaCalendarAlt />}
           />
           <SummaryCard
             title={lang.dashboard.spentToday}
-            amount={`$${(summary?.total_day || 0).toFixed(2)}`}
+            amount={`${(summary?.total_day || 0).toFixed(2)} RON`}
             subtitle={lang.dashboard.subtitleToday}
             icon={<FaCalendarAlt />}
           />
           <SummaryCard
             title={lang.dashboard.thisWeek}
-            amount={`$${(summary?.total_week || 0).toFixed(2)}`}
+            amount={`${(summary?.total_week || 0).toFixed(2)} RON`}
             subtitle={lang.dashboard.subtitleWeek}
             icon={<FaCalendarAlt />}
           />
@@ -123,7 +109,7 @@ const Dashboard = () => {
                 category={expense.category}
                 name={expense.vendor}
                 dateTime={expense.datetime}
-                amount={`$${(expense.total).toFixed(2)}`}
+                amount={`${(expense.total).toFixed(2)} RON`}
               />
             ))}
           </div>

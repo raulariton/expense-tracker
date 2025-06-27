@@ -3,6 +3,12 @@ from models.receipt_scanning_models import Expense
 import re
 from datetime import date, time
 from dateutil import parser
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+dotenv_path = Path(__file__).resolve().parent.parent / ".env"
+load_dotenv(dotenv_path)
 
 def llm_process_text(ocr_text: str) -> str:
     from openai import OpenAI
@@ -12,7 +18,7 @@ def llm_process_text(ocr_text: str) -> str:
     # add your openrouter API key here
     client = OpenAI(
         base_url="https://openrouter.ai/api/v1",
-        api_key="",
+        api_key=os.getenv("OPENROUTER_API_KEY"),
         timeout=timeout
     )
 
@@ -39,7 +45,7 @@ def llm_process_text(ocr_text: str) -> str:
     - Ensure that the total amount is logical, and matches the sum of various other items identified in the receipt.
     - The identified category must be one of the following: "Food & Dining", "Transport", "Shopping", "Bills" or "Other"
     - If you can't determine any field with reasonable confidence, use "Unknown"
-    - Do not include any explanations or additional text
+    - Do NOT include any type of parenthesis.
     - Always use the exact label format shown above
     - Do NOT include any additional text or explanations.
     """

@@ -6,7 +6,7 @@ import { Toaster } from "react-hot-toast";
 //pages layout 
 const MainLayout = ({ children }) => {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
       <Toaster
         position={"top-center"}
@@ -28,11 +28,11 @@ const MainLayout = ({ children }) => {
           },
         }}
       />
-      <div className="page-content">
+      <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-25">
         {children}
-      </div>
+      </main>
       <Footer />
-    </>
+    </div>
   );
 };
 

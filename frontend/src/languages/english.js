@@ -1,10 +1,10 @@
 export default {
-  expense_categories: {
-    food_and_dining: "Food & Dining",
-    shopping: "Shopping",
-    transport: "Transport",
-    bills: "Bills",
-    other: "Other"
+  expenseCategories: {
+    "Food & Dining": "Food & Dining",
+    "Shopping": "Shopping",
+    "Transport": "Transport",
+    "Bills": "Bills",
+    "Other": "Other"
   },
   navbar: {
     dashboard: "Dashboard",
@@ -14,7 +14,9 @@ export default {
     settings: "Settings",
     logout: "Logout",
     login: "Login",
-    language: "Language"
+    language: "Language",
+    adminManagement: "Admin Management",
+    scanReceipt: "Scan Receipt",
   },
   dashboard: {
     totalSpent: "Spent This Month",
@@ -52,13 +54,15 @@ export default {
     title: "Account Settings",
     viewTitle: "Account Information",
     name: "First Name",
-    lastName: "Last Name",
+    username: "Username",
     email: "Email",
     password: "Password",
     created: "Account Created",
     edit: "Edit Profile",
     cancel: "Cancel",
-    save: "Save Changes"
+    save: "Save Changes",
+    role: "Role",
+    userExists: "Username already taken"
   },
   auth: {
     loginTab: "Login",
@@ -79,13 +83,61 @@ export default {
   },
   home: {
     title: "Welcome to ExpenseTracker",
-      description: "Track your spending easily, manage receipts, and gain insights into your expenses in a clean and modern interface.",
-      ShomeTitle: "...",
+    description: "Track your spending easily, manage receipts, and gain insights into your expenses in a clean and modern interface.",
+    ShomeTitle: "...",
      
+  },
+  admin: {
+    title: "Create new Admin",
+    button: "Create Admin",
+    response: "Status: ",
+    adminList: "Admin List"
+  },
+  adminDashboardTileDescriptions: {
+    usersRegistered: "Users registered",
+    totalAmountExpensesLogged: "worth of expenses logged",
+    totalExpensesLogged: "Expenses logged",
+    receiptsScanned: "Receipts scanned",
+    ocrAccuracy: "Receipt scanning accuracy",
+  },
+  adminDashboard: {
+    expenseCountByCategory: "Expenses count by category",
+    expenseAmountByCategory: "Expenses amount by category",
+    legend: "Legend",
+    entries: "entries",
+  },
+  adminManagement: {
+    header: "Admin Management",
+    description: "View, create and manage administrators for the application.",
+    searchPlaceholder: "Search for an admin",
+    createAdmin: "Create New Admin",
+    sortOptions: {
+      emailAsc: "Email (A-Z)",
+      emailDesc: "Email (Z-A)",
+      dateAsc: "Date Created (Oldest First)",
+      dateDesc: "Date Created (Newest First)",
+      default: "Default (no sorting)"
+    },
+    noAdministratorsFound: "No administrators found.",
+    adminCreationForm: {
+      header: "Create New Admin",
+      instructions: "Enter the email address of the new administrator you want to create. They will receive an email with their password to log in.",
+      emailLabel: "Email",
+      emailPlaceholder: "john.doe@gmail.com",
+      emailError: "Admin already exists!",
+      createButton: "Create",
+      creatingButton: "Creating...",
+      successMessage: "Admin Created Successfully!",
+      successDescription: "An invitation email has been sent to the administrator.",
+      closeButton: "Close",
+    }
+  },
+  adminScanReceipt: {
+    header: "Scan Receipt",
+    description: "Test out the receipt scanning functionality. You can also use the provided example receipts proven to work well.",
+    resultsTabLabel: "Results",
+    JSONCodeTabLabel: "JSON Code",
+    exampleReceiptsHeader: "Example Receipts",
+
   }
-  
-  
-  
-  
-  
 };

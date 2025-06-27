@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
 import "../styles/statistics.css";
 import axios from "axios";
@@ -16,17 +16,15 @@ import {
   CartesianGrid
 } from "recharts";
 import { useLanguage } from "../context/LanguageContext";
-import { AuthContext } from "../App.jsx";
 import toast from "react-hot-toast";
 import ActivityItem from "../components/ActivityItem.jsx";
 import PaginationButtons from "../components/PaginationButtons.jsx";
 import DateFilterer from "../components/DateFilterer.jsx";
-
-// TODO: Create a component for both charts; cleaner look
+import { useAuth } from "../context/AuthContext.jsx";
 
 const Statistics = () => {
   const { lang } = useLanguage();
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated } = useAuth();
   const colorOfCategory = {
     "Food & Dining": "#264653",
     "Shopping": "#2A9D8F",
@@ -50,10 +48,12 @@ const Statistics = () => {
   const expensesPerPage = 5; // number of expenses to show per page
   const [paginatedExpenses, setPaginatedExpenses] = useState([]);
   const [totalExpenses, setTotalExpenses] = useState(0);
+  const [dateRangeFilter, setDateRangeFilter] = useState({
+    startDate: null,
+    endDate: null
+  });
 
   useEffect(() => {
-    // fetch data
-
     // get all expenses
     const getAllExpenses = async () => {
       const token = localStorage.getItem("access_token");
@@ -65,11 +65,19 @@ const Statistics = () => {
           {
             headers: {
               Authorization: `Bearer ${token}`
+            },
+            params: {
+              start_date: dateRangeFilter.startDate ?? null,
+              end_date: dateRangeFilter.endDate ?? null
             }
           }
         );
 
-        setExpensesList(response.data.expenses);
+        // avoid setting expensesList if date filter is applied
+        // to avoid rendering the area chart with data filtered by date
+        if (!dateRangeFilter.startDate && !dateRangeFilter.endDate)
+          setExpensesList(response.data.expenses);
+
         setTotalExpenses(response.data.expenses.length);
 
       } catch (error) {
@@ -77,6 +85,11 @@ const Statistics = () => {
       }
     };
 
+    getAllExpenses();
+
+  }, [dateRangeFilter.startDate, dateRangeFilter.endDate]);
+
+  useEffect(() => {
     const getCategoryTotals = async () => {
       const token = localStorage.getItem("access_token");
 
@@ -104,10 +117,6 @@ const Statistics = () => {
         toast.error("Error occurred: " + error.message);
       }
     };
-
-
-      // get all user expenses to group them by date
-      getAllExpenses();
 
       // get total by category
       getCategoryTotals();
@@ -161,12 +170,18 @@ const Statistics = () => {
             },
             params: {
               limit: expensesPerPage,
-              offset: (pageNumber - 1) * expensesPerPage
+              offset: (pageNumber - 1) * expensesPerPage,
+              start_date: dateRangeFilter.startDate ?? null,
+              end_date: dateRangeFilter.endDate ?? null
             }
           }
         );
 
         setPaginatedExpenses(response.data.expenses);
+
+        // only set total expenses (for pagination) if date filter has been applied
+        // if (dateRangeFilter.startDate && dateRangeFilter.endDate)
+        //   setTotalExpenses(response.data.expenses.length)
 
       } catch (error) {
         toast.error("Error occurred: " + error.message);
@@ -174,7 +189,7 @@ const Statistics = () => {
     }
 
     getExpensesWithPagination();
-  }, [pageNumber, expensesPerPage]);
+  }, [pageNumber, expensesPerPage, dateRangeFilter.startDate, dateRangeFilter.endDate]);
 
   if (!isAuthenticated) {
     return (
@@ -186,24 +201,19 @@ const Statistics = () => {
     );
   }
 
-  const displayCategoryNameUsingLocale = (category) => {
-    switch (category) {
-      case "Food & Dining":
-        return lang.expense_categories.food_and_dining;
-      case "Shopping":
-        return lang.expense_categories.shopping;
-      case "Transport":
-        return lang.expense_categories.transport;
-      case "Bills":
-        return lang.expense_categories.bills;
-      default:
-        return lang.expense_categories.other;
-    }
+  const handleDateFilterApply = (dateRange) => {
+    setDateRangeFilter({
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate
+    });
+
+    // reset page number to 1 when applying a new filter
+    setPageNumber(1);
   }
 
-  const localizedCategoryTotals = categoryTotals.map(category => ({
-    ...category,
-    category: displayCategoryNameUsingLocale(category.category)
+  const localizedCategoryTotals = categoryTotals.map(item => ({
+    ...item,
+    category: lang.expenseCategories[item.category]
   }))
 
     return (
@@ -264,7 +274,7 @@ const Statistics = () => {
           {/* TODO: Grouping by date */}
           <div className="expense-card">
             <h3>{lang.statistics.title}</h3>
-            <DateFilterer />
+            <DateFilterer onFilterApply={handleDateFilterApply}/>
             <div className="expense-list"
              style={{ height: `${expensesPerPage * 4.1}rem` }}>
             {paginatedExpenses && paginatedExpenses.map((expense, index) => (
@@ -273,7 +283,7 @@ const Statistics = () => {
                 category={expense.category}
                 name={expense.vendor}
                 dateTime={expense.datetime}
-                amount={`$${(expense.total).toFixed(2)}`}
+                amount={`${(expense.total).toFixed(2)} RON`}
               />
             ))}
             </div>

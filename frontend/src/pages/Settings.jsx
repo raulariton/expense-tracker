@@ -2,53 +2,100 @@ import React, { useState, useEffect } from "react";
 import MainLayout from "../layouts/MainLayout";
 import "../styles/Settings.css";
 import { useLanguage } from "../context/LanguageContext";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 const Settings = () => {
   const { lang } = useLanguage();
   const [editing, setEditing] = useState(false);
+  const [error, setError] = useState("");
+  const [response, setResponse] = useState('');
+  const [alert, setAlert] = useState("")
+  const [originalForm, setOriginalForm] = useState({});
   const [form, setForm] = useState({
-    name: "",
-    lastName: "",
+
+
     email: "",
     createdAt: "",
     password: ""
   });
 
+
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    const storedUser = JSON.parse(localStorage.getItem("user_info"));
     if (storedUser) {
-      setForm({
-        name: storedUser.name || "",
-        lastName: storedUser.lastName || "",
+      const initialData = {
+        username: storedUser.username,
         email: storedUser.email,
-        createdAt: storedUser.createdAt,
-        password: ""
-      });
+        createdAt: storedUser.creation_date,
+        role: storedUser.role
+      }
+
+      setForm(initialData)
+      setOriginalForm(initialData);
+
     }
   }, []);
 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+    const regex = /^[A-Za-z0-9_]+$/;
+    if (regex.test(value) || value === "") {
+      setAlert("");
+    } else {
+      setAlert("Only letters, numbers, and underscores allowed!");
+    }
+
+    if(value.length > 10) {
+      setAlert("Username must not be longer than 10 characters!")
+    }
+
+
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+   const handleSubmit = async(e) => {
     e.preventDefault();
 
-    const updatedUser = {
-      ...form,
-      id: JSON.parse(localStorage.getItem("currentUser")).id,
-      passwordHash: form.password || JSON.parse(localStorage.getItem("currentUser")).passwordHash
-    };
 
-    const db = JSON.parse(localStorage.getItem("appData"));
-    const updatedUsers = db.users.map((u) =>
-      u.id === updatedUser.id ? updatedUser : u
-    );
-    db.users = updatedUsers;
 
-    localStorage.setItem("appData", JSON.stringify(db));
-    localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+    const user_data = JSON.parse(localStorage.getItem("user_info"))
+
+    //TODO: make api request to change username in database
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/settings/modify-settings",
+        {"username": form.username},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`
+          },
+        },
+      );
+
+      setResponse(response.data)
+
+      if(response.data){
+        user_data.username = form.username
+        localStorage.setItem("user_info",JSON.stringify(user_data))
+
+        setOriginalForm(form)
+      }
+
+
+
+      } catch (error) {
+      if (error.response && error.response.status === 400) {
+        setAlert(lang.settings.userExists);
+        return
+      } else {
+        setError(error.message);
+      }
+    }
+
 
     setEditing(false);
   };
@@ -59,10 +106,10 @@ const Settings = () => {
         {!editing ? (
           <div className="profile-card">
             <h2>{lang.settings.viewTitle}</h2>
-            <p><strong>{lang.settings.name}:</strong> {form.name || "—"}</p>
-            <p><strong>{lang.settings.lastName}:</strong> {form.lastName || "—"}</p>
+            <p><strong>{lang.settings.username}:</strong> {form.username}</p>
             <p><strong>{lang.settings.email}:</strong> {form.email}</p>
             <p><strong>{lang.settings.created}:</strong> {form.createdAt}</p>
+            <p><strong>{lang.settings.role}:</strong> {form.role}</p>
             <button className="edit-btn" onClick={() => setEditing(true)}>
               {lang.settings.edit}
             </button>
@@ -72,43 +119,39 @@ const Settings = () => {
             <h2>{lang.settings.edit}</h2>
 
             <label>
-              {lang.settings.name}
-              <input name="name" value={form.name} onChange={handleChange} />
+              {lang.settings.username}
+              <input name="username" value={form.username} onChange={handleChange} />
             </label>
 
-            <label>
-              {lang.settings.lastName}
-              <input name="lastName" value={form.lastName} onChange={handleChange} />
-            </label>
+            <p className="alert-message">{alert}</p>
 
-            <label>
-              {lang.settings.email}
-              <input name="email" value={form.email} onChange={handleChange} />
-            </label>
-
-            <label>
-              {lang.settings.password}
-              <input
-                name="password"
-                type="password"
-                value={form.password}
-                onChange={handleChange}
-              />
-            </label>
 
             <div className="readonly-info">
+
+              <strong>{lang.settings.email}:</strong> {form.email}
+              <p></p>
               <strong>{lang.settings.created}:</strong> {form.createdAt}
+
             </div>
+
+
 
             <div className="form-actions">
               <button
                 className="cancel-btn"
                 type="button"
-                onClick={() => setEditing(false)}
+                onClick={() => {
+                  setEditing(false);
+                  setAlert("");
+                  setForm(originalForm);
+                }}
               >
                 {lang.settings.cancel}
               </button>
-              <button type="submit" className="save-btn">
+
+              <button type="submit"
+                      disabled={alert !== "" || !form.username}
+                      className="save-btn">
                 {lang.settings.save}
               </button>
             </div>
